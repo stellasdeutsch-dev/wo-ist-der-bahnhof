@@ -1,0 +1,1360 @@
+<title>Wo ist der Bahnhof?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&display=swap">
+<style>
+:root{
+  --blue:#014CFF;
+  --blue-deep:#0038C2;
+  --lime:#B4EC5C;
+  --ink:#0A0A0A;
+  --paper:#F0F1F3;
+  --white:#FFFFFF;
+  --muted:#5B6275;
+  --hair:#DCE0E8;
+  --line:rgba(255,255,255,.28);
+  --red:#FF5A4E;
+  --r-xl:28px;
+  --r-lg:22px;
+  --r-md:16px;
+  --font:'Urbanist',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  color-scheme:light;
+}
+@media (min-width:900px){:root{--r-xl:44px;--r-lg:28px}}
+html{background:var(--blue);scroll-behavior:smooth}
+body{margin:0;background:var(--blue);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+img,video{max-width:100%;display:block}
+button{font-family:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--lime);outline-offset:3px;border-radius:12px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- frame ---------- */
+.site{position:relative;max-width:1440px;margin:0 auto;padding-inline:16px;padding-block:16px 0;overflow-x:clip}
+.site::before,.site::after{content:"";position:absolute;top:0;bottom:0;width:1px;background:var(--line);pointer-events:none}
+.site::before{left:8px}.site::after{right:8px}
+@media (min-width:900px){.site{padding-inline:36px;padding-block:24px 0}.site::before{left:18px}.site::after{right:18px}}
+
+.panel{position:relative;background:var(--paper);border-radius:var(--r-xl);padding:32px 20px;margin-block:16px}
+.panel.white{background:var(--white)}
+.band{position:relative;color:var(--white);padding:44px 4px}
+@media (min-width:900px){.panel{padding:64px 56px;margin-block:24px}.band{padding:80px 20px}}
+
+/* ---------- section head (NeoVet 3-col) ---------- */
+.sec-head{display:grid;gap:14px;margin-bottom:28px}
+.sec-head .mark{width:40px;height:40px;color:var(--blue);--plus:var(--ink)}
+.band .sec-head .mark{color:var(--white);--plus:var(--lime)}
+.sec-head h2{margin:0;font-weight:500;font-size:clamp(42px,11.5vw,88px);line-height:.95;letter-spacing:-.045em;text-wrap:balance}
+.sec-head p{margin:0;font-size:15.5px;line-height:1.45;color:var(--muted);max-width:36ch}
+.band .sec-head p{color:rgba(255,255,255,.84)}
+@media (min-width:900px){
+  .sec-head{grid-template-columns:1fr auto 1fr;align-items:center;margin-bottom:48px}
+  .sec-head h2{text-align:center}
+  .sec-head p{justify-self:end}
+  .sec-head.left{grid-template-columns:auto 1fr;}
+  .sec-head.left h2{text-align:left}
+}
+.dot{display:inline-block;width:.17em;height:.17em;border-radius:50%;background:var(--lime);margin-left:.05em;vertical-align:baseline}
+.q{color:var(--blue)}
+.band .q{color:var(--lime)}
+
+/* ---------- controls ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 26px;border-radius:999px;border:0;font:600 16px/1 var(--font);text-decoration:none;cursor:pointer;transition:transform .2s ease,background .2s ease,color .2s ease;white-space:nowrap}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn.blue{background:var(--blue);color:var(--white)}
+.btn.lime{background:var(--lime);color:var(--ink)}
+.btn.white{background:var(--white);color:var(--ink)}
+.btn.ghost{background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px currentColor}
+.btn.sm{padding:11px 18px;font-size:14.5px}
+.btn svg{width:18px;height:18px}
+.pill{display:inline-flex;align-items:center;padding:6px 13px;border-radius:999px;background:var(--blue);color:var(--white);font-size:13px;font-weight:500;line-height:1.2}
+.pill.lime{background:var(--lime);color:var(--ink)}
+.pill.ink{background:var(--ink);color:var(--lime)}
+.say{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:var(--blue);color:var(--white);display:inline-grid;place-items:center;cursor:pointer;transition:transform .2s,background .2s}
+.say svg{width:19px;height:19px}
+.say:hover{transform:scale(1.07)}
+.say.talking{background:var(--lime);color:var(--ink);animation:talk .8s ease-in-out infinite}
+.band .say{background:var(--lime);color:var(--ink)}
+.no-tts .say{display:none}
+@keyframes talk{50%{box-shadow:0 0 0 8px rgba(180,236,92,.35)}}
+.card-note{font-size:14px;line-height:1.45;color:#30364A}
+em.hl,.hl-b{font-style:normal;color:var(--blue)}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;padding-bottom:36px}
+.hero-card{position:relative;background:var(--paper);border-radius:var(--r-xl);padding:14px 16px 0}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 4px 0}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:-.02em}
+.brand svg{width:34px;height:34px;color:var(--blue);--plus:var(--ink)}
+.nav-links{display:none;gap:30px;font-size:14px}
+.nav-links a{text-decoration:none;color:#3A4152}
+.nav-links a:hover{color:var(--blue)}
+@media (min-width:1000px){.nav-links{display:flex}.hero-card{padding:18px 36px 0}}
+.mega{margin:34px 0 0;font-weight:500;letter-spacing:-.055em;line-height:.86;font-size:clamp(54px,calc((100vw - 64px)/4.75),232px);padding-bottom:.16em}
+.mega .ln{display:block;overflow:clip;overflow-clip-margin:.2em;padding-top:.14em;margin-top:-.14em}
+.mega .ln>span{display:inline-block;animation:rise 1s cubic-bezier(.2,.85,.25,1) both}
+.mega .ln:nth-child(2)>span{animation-delay:.12s}
+.ti{position:relative;display:inline-block}
+.ti::after{content:"";position:absolute;left:50%;top:.035em;width:.2em;height:.2em;margin-left:-.1em;border-radius:50%;background:var(--lime);animation:drop .7s cubic-bezier(.3,1.6,.5,1) .95s both}
+@keyframes rise{from{transform:translateY(105%)}to{transform:none}}
+@keyframes drop{from{transform:translateY(-1.2em) scale(.4);opacity:0}to{transform:none;opacity:1}}
+
+.hero-low{position:relative;display:grid;gap:22px;padding:0 4px;color:var(--white)}
+.post-wrap{position:relative;z-index:2;justify-self:center;width:min(330px,88%);margin-top:-44px}
+.post{width:100%;height:auto;overflow:visible}
+.post .pole{transform-box:fill-box;transform-origin:50% 100%;animation:grow .7s cubic-bezier(.2,.8,.3,1) .25s both}
+.post .cap{transform-box:fill-box;transform-origin:50% 50%;animation:pop .5s cubic-bezier(.3,1.7,.5,1) .85s both}
+.post .sign{animation:unfold .75s cubic-bezier(.25,1.35,.4,1) both, sway 7s ease-in-out 2.4s infinite}
+.post .s1{animation-delay:.6s,2.4s}.post .s2{animation-delay:.78s,2.9s}.post .s3{animation-delay:.96s,3.3s}.post .s4{animation-delay:1.14s,3.7s}
+@keyframes grow{from{transform:scaleY(0)}to{transform:none}}
+@keyframes pop{from{transform:scale(0)}to{transform:none}}
+@keyframes unfold{from{transform:scaleX(0)}to{transform:none}}
+@keyframes sway{0%,100%{transform:rotate(0)}50%{transform:rotate(-1.6deg)}}
+.hero-stat b{display:block;font-weight:400;font-size:clamp(40px,11vw,64px);letter-spacing:-.04em;line-height:1}
+.hero-stat span{font-size:14px;opacity:.85;display:block;max-width:22ch;line-height:1.35;margin-top:4px}
+.hero-pitch h1{margin:0 0 10px;font-weight:500;font-size:clamp(26px,6.6vw,36px);line-height:1.1;letter-spacing:-.025em}
+.hero-pitch p{margin:0 0 18px;font-size:15.5px;opacity:.88;max-width:40ch}
+.hero-row{display:flex;gap:18px;align-items:flex-end;justify-content:space-between}
+@media (min-width:900px){
+  .hero-low{grid-template-columns:1fr minmax(300px,420px) 1fr;align-items:end;padding:0 20px}
+  .post-wrap{grid-column:2;grid-row:1;width:100%;margin-top:-190px}
+  .hero-stat{grid-column:1;grid-row:1;align-self:center}
+  .hero-pitch{grid-column:3;grid-row:1;align-self:center}
+}
+
+/* ---------- STORY ---------- */
+.story{display:grid;gap:28px}
+.story h2{margin:0;font-weight:500;font-size:clamp(42px,11.5vw,76px);line-height:.95;letter-spacing:-.045em}
+.lead,.story-text p.lead{margin:0;font-weight:500;font-size:clamp(27px,6.6vw,48px);line-height:1.1;letter-spacing:-.025em;text-wrap:balance}
+.story-text p{margin:0 0 14px;font-size:18px;max-width:54ch}
+.story-text p.punch{font-weight:600;font-size:20px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:26px}
+.stat b{display:block;color:var(--blue);font-weight:400;font-size:clamp(38px,11vw,68px);letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+.stat b small{font-size:.42em;letter-spacing:-.01em;margin-left:.08em}
+.stat span{display:block;margin-top:6px;font-size:13.5px;line-height:1.3;color:var(--muted)}
+.after{margin-top:24px;padding:18px 20px;border-radius:var(--r-md);background:var(--white);font-size:17px}
+@media (min-width:900px){.story{grid-template-columns:.8fr 1.2fr;gap:56px}.story-text p{font-size:19px}}
+
+.phone{position:relative;width:min(250px,72%);aspect-ratio:9/18.6;margin:26px auto 0;border-radius:40px;background:#0B0B0B;padding:10px;box-shadow:0 30px 60px -30px rgba(1,40,140,.55)}
+.phone::before{content:"";position:absolute;top:18px;left:50%;width:34%;height:20px;margin-left:-17%;border-radius:20px;background:#0B0B0B;z-index:3}
+.screen{position:relative;height:100%;border-radius:31px;overflow:hidden;background:#F4F5F8}
+.sbar{position:absolute;top:0;left:0;right:0;z-index:2;display:flex;justify-content:space-between;padding:14px 20px 0;font-size:12px;font-weight:700}
+.batt{display:inline-flex;align-items:center;gap:4px;color:var(--red)}
+.batt i{display:inline-block;width:22px;height:11px;border:1.5px solid currentColor;border-radius:3px;position:relative}
+.batt i::after{content:"";position:absolute;left:1.5px;top:1.5px;bottom:1.5px;width:3px;background:currentColor;border-radius:1px}
+.phone.in .batt{animation:blink 7s infinite}
+.mini-map{position:absolute;inset:0;width:100%;height:100%}
+.pinhop{transform-box:fill-box;transform-origin:50% 100%}
+.phone.in .pinhop{animation:hop 7s infinite}
+.toast{position:absolute;left:12px;right:12px;bottom:16px;z-index:2;background:var(--white);border-radius:16px;padding:10px 12px;font-size:12px;line-height:1.3;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+.toast b{display:block;font-size:13px}
+.dead{position:absolute;inset:0;z-index:4;background:#000;display:grid;place-items:center;color:#777;font-size:13px;opacity:0;pointer-events:none}
+.phone.in .dead{animation:die 7s infinite}
+@keyframes blink{0%,40%{opacity:1}45%{opacity:.2}50%{opacity:1}55%{opacity:.2}60%{opacity:1}}
+@keyframes hop{0%,30%,100%{transform:none}35%{transform:translateY(-8px)}40%{transform:none}}
+@keyframes die{0%,62%{opacity:0}66%,90%{opacity:1}96%,100%{opacity:0}}
+
+/* ---------- ASK cards ---------- */
+.cards{display:grid;gap:14px}
+@media (min-width:700px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1150px){.cards.four{grid-template-columns:repeat(4,1fr);align-items:end}}
+.card{position:relative;background:var(--white);color:var(--ink);border-radius:var(--r-lg);padding:18px;display:flex;flex-direction:column;gap:12px;min-height:300px;transition:transform .3s ease,box-shadow .3s ease}
+.card:hover{transform:translateY(-4px);box-shadow:0 24px 40px -24px rgba(0,0,0,.35)}
+.card .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.card .de{font-size:23px;font-weight:600;line-height:1.18;letter-spacing:-.015em;margin:0}
+.card .ru{margin:0;color:var(--muted);font-size:15px}
+.card .num{margin-top:auto;font-size:clamp(70px,17vw,104px);font-weight:400;color:var(--blue);letter-spacing:-.06em;line-height:.8}
+.card.feat img{width:100%;aspect-ratio:2/1;object-fit:cover;border-radius:14px}
+@media (min-width:1150px){.card.feat{transform:translateY(-28px)}.card.feat:hover{transform:translateY(-32px)}}
+.strip{margin-top:16px;background:var(--lime);color:var(--ink);border-radius:var(--r-lg);padding:16px 18px;display:flex;gap:14px;align-items:center}
+.strip p{margin:0;font-size:15.5px}
+.strip b{font-weight:600}
+
+/* ---------- ZUM / ZUR ---------- */
+.zum-grid{display:grid;gap:16px}
+@media (min-width:1000px){.zum-grid{grid-template-columns:1.35fr .9fr}}
+.box{background:var(--white);border-radius:var(--r-lg);padding:20px}
+@media (min-width:900px){.box{padding:28px}}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{border:1.5px solid var(--hair);background:var(--white);color:var(--ink);border-radius:999px;padding:9px 15px;font:500 15px var(--font);cursor:pointer;transition:all .2s}
+.tab[aria-selected="true"]{background:var(--blue);border-color:var(--blue);color:var(--white)}
+.zstage{margin:26px 0 8px;font-size:clamp(30px,7.6vw,58px);font-weight:500;letter-spacing:-.035em;line-height:1.15;min-height:2.4em}
+.zstage .w-zu{color:var(--blue);transition:color .4s}
+.zstage .gap{display:inline-block;width:.26em;transition:width .5s .1s}
+.art{display:inline-block;padding:0 .12em;border-radius:.2em;background:rgba(1,76,255,.09);transition:background .4s,padding .5s}
+.art.dat{background:var(--lime)}
+.art.flip{animation:flipin .45s cubic-bezier(.3,1.4,.5,1)}
+@keyframes flipin{from{transform:rotateX(90deg) translateY(-.2em);opacity:0}}
+.a-drop{display:inline-block;max-width:1.3em;overflow:hidden;vertical-align:top;transition:max-width .55s .15s,opacity .35s .1s}
+.zstage.merged .gap{width:0}
+.zstage.merged .a-drop{max-width:0;opacity:0}
+.zstage.merged .art{background:transparent;padding:0;color:var(--blue)}
+.zstage.merged .glue{animation:glow .9s ease .5s}
+@keyframes glow{40%{text-shadow:0 0 .4em rgba(180,236,92,.9)}}
+.nobadge{display:inline-block;vertical-align:middle;margin-left:.3em;font-size:14px;letter-spacing:0;padding:5px 10px;border-radius:999px;background:var(--ink);color:var(--lime);opacity:0;transform:scale(.6);transition:all .35s}
+.zstage.nomerge .nobadge{opacity:1;transform:none;animation:shake .5s .2s}
+@keyframes shake{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+.phases{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.ph{font-size:12.5px;color:var(--muted);font-weight:500}
+.ph::before{content:"";display:block;height:6px;border-radius:9px;background:#E4E7EE;margin-bottom:6px;transition:background .3s}
+.ph.on::before{background:var(--blue)}
+.ph.on{color:var(--ink)}
+.zcap{min-height:4.2em;margin:16px 0;font-size:16.5px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px}
+.formulas{display:grid;gap:8px;margin-top:20px}
+@media (min-width:600px){.formulas{grid-template-columns:repeat(3,1fr)}}
+.fm{border-radius:var(--r-md);padding:14px;background:var(--paper)}
+.fm b{display:block;font-size:20px;font-weight:600;letter-spacing:-.02em}
+.fm span{font-size:13.5px;color:var(--muted)}
+.fm.no b{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--red)}
+.game{background:var(--blue);color:var(--white);border-radius:var(--r-lg);padding:20px;display:flex;flex-direction:column;gap:14px}
+@media (min-width:900px){.game{padding:28px}}
+.game h3{margin:0;font-weight:500;font-size:24px;letter-spacing:-.02em}
+.game .score{font-size:14px;opacity:.8}
+.gq{font-size:clamp(26px,6.4vw,34px);font-weight:500;letter-spacing:-.02em;line-height:1.2;margin:0}
+.blank{display:inline-block;min-width:2.3em;border-bottom:3px solid var(--lime);text-align:center;color:var(--lime)}
+.ghint{font-size:14px;opacity:.8}
+.opts{display:flex;gap:10px}
+.opt{flex:1;border:0;border-radius:999px;padding:14px 10px;background:var(--white);color:var(--ink);font:600 19px var(--font);cursor:pointer;transition:all .2s}
+.opt:disabled{cursor:default}
+.opt.ok{background:var(--lime)}
+.opt.bad{background:var(--red);color:var(--white)}
+.gfb{min-height:3em;font-size:15.5px;margin:0}
+
+/* ---------- DIRECTIONS ---------- */
+.dir-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media (min-width:700px){.dir-grid{grid-template-columns:repeat(3,1fr);gap:14px}}
+@media (min-width:1150px){.dir-grid{grid-template-columns:repeat(4,1fr)}}
+.dcard{border:0;background:var(--white);color:var(--ink);border-radius:var(--r-lg);padding:14px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;cursor:pointer;font:inherit;transition:transform .25s}
+.dcard:hover{transform:translateY(-3px)}
+.dcard:active{transform:scale(.98)}
+.ico{width:58px;height:58px;border-radius:17px;background:var(--blue);display:grid;place-items:center;margin-bottom:4px}
+.ico svg{width:40px;height:40px;overflow:visible}
+.ico .st{fill:none;stroke:#fff;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round}
+.ico .lm{fill:none;stroke:var(--lime);stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round}
+.ico .lf{fill:var(--lime)}
+.dcard b{font-size:18px;font-weight:600;line-height:1.15;letter-spacing:-.01em}
+.dcard small{font-size:14px;color:var(--muted);line-height:1.3}
+.dcard .case{font-size:12px;font-weight:600;color:var(--blue);letter-spacing:.02em}
+.mv{transform-box:fill-box;animation-duration:2.2s;animation-iteration-count:infinite;animation-timing-function:ease-in-out;animation-play-state:paused}
+.dir-grid.in .mv,.dcard:hover .mv{animation-play-state:running}
+.m-up{animation-name:mUp}
+@keyframes mUp{50%{transform:translateY(-5px)}}
+.m-draw{stroke-dasharray:60;animation-name:mDraw}
+@keyframes mDraw{0%{stroke-dashoffset:0}45%{stroke-dashoffset:60}46%{stroke-dashoffset:-60}100%{stroke-dashoffset:0}}
+.m-light{animation-name:mLight;animation-duration:3s}
+.m-light.d2{animation-delay:1s}.m-light.d3{animation-delay:2s}
+@keyframes mLight{0%,30%{opacity:1}33%,100%{opacity:.2}}
+.m-pulse{transform-origin:center;animation-name:mPulse}
+@keyframes mPulse{50%{transform:scale(1.5)}}
+.m-sway{transform-origin:50% 100%;animation-name:mSway}
+@keyframes mSway{25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
+.m-wave{animation-name:mWave;animation-timing-function:linear;animation-duration:1.6s}
+@keyframes mWave{to{transform:translateX(-8px)}}
+.m-lr{animation-name:mLR}
+@keyframes mLR{50%{transform:translateX(3px)}}
+.cases{display:grid;gap:10px;margin-top:16px}
+@media (min-width:800px){.cases{grid-template-columns:repeat(3,1fr)}}
+.case-card{border:1px solid rgba(255,255,255,.35);border-radius:var(--r-lg);padding:18px}
+.case-card h3{margin:0 0 6px;font-size:19px;font-weight:600}
+.case-card p{margin:0;font-size:15px;opacity:.9}
+.case-card code{font-family:var(--font);font-weight:600;color:var(--lime)}
+
+/* ---------- IMPERATIVE ---------- */
+.imp-grid{display:grid;gap:16px}
+@media (min-width:1000px){.imp-grid{grid-template-columns:1.15fr 1fr}}
+.fstage{position:relative;display:flex;flex-wrap:wrap;align-content:center;gap:.22em;min-height:3.2em;margin:24px 0 6px;font-size:clamp(32px,8vw,60px);font-weight:500;letter-spacing:-.035em;line-height:1.1}
+.tk{display:inline-block;padding:.02em .14em;border-radius:.18em;transition:background .35s,color .35s,padding .35s,opacity .35s}
+.tk.v{color:var(--blue)}
+.tk.pre{background:var(--lime)}
+.tk.gone{position:absolute;left:0;top:0;opacity:0;pointer-events:none}
+.tk.enter{animation:tin .45s cubic-bezier(.3,1.4,.5,1)}
+@keyframes tin{from{opacity:0;transform:scale(.5)}}
+.fstage.glue{gap:0}
+.fstage.glue .tk{padding-inline:0;background:transparent}
+.fcount{font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.04em}
+.fcap{min-height:3.4em;margin:12px 0 16px;font-size:16.5px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--paper);gap:4px;margin-bottom:14px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:9px 16px;font:600 14.5px var(--font);white-space:nowrap;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--blue);color:var(--white)}
+.plist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.plist li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 12px 12px 16px;border-radius:var(--r-md);background:var(--paper);transition:opacity .25s,transform .25s}
+.plist li.swap{opacity:0;transform:translateY(6px)}
+.plist .de{font-size:18px;font-weight:600;line-height:1.25}
+.plist .de i{font-style:normal;color:var(--blue)}
+.plist .de u{text-decoration:none;background:var(--lime);border-radius:.2em;padding:0 .12em}
+.plist .ru{font-size:14px;color:var(--muted)}
+
+/* ---------- ROUTE ---------- */
+.route-grid{display:grid;gap:16px}
+@media (min-width:1000px){.route-grid{grid-template-columns:1fr 1fr;align-items:start}}
+.map-card{background:var(--white);border-radius:var(--r-lg);padding:10px}
+.map{width:100%;height:auto;display:block;border-radius:16px}
+.map text{font-family:var(--font)}
+.lm-ring{fill:none;stroke:var(--blue);stroke-width:3;opacity:0;transform-box:fill-box;transform-origin:center}
+.hl .lm-ring{opacity:1;animation:ring 1.4s ease-out infinite}
+@keyframes ring{from{transform:scale(.6);opacity:1}to{transform:scale(1.35);opacity:0}}
+.snum{opacity:0;transition:opacity .4s;transform-box:fill-box;transform-origin:center}
+.map.nums .snum{opacity:1;animation:pop .45s cubic-bezier(.3,1.7,.5,1)}
+.now{display:flex;flex-direction:column;gap:10px}
+.now .count{font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--muted)}
+.now .de-row{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+.now .de{margin:0;font-size:clamp(24px,5.8vw,32px);font-weight:600;line-height:1.18;letter-spacing:-.02em}
+.now .de mark{background:none;color:var(--blue)}
+.now .ru{margin:0;color:var(--muted);font-size:16px}
+.now .note{margin:0;padding:12px 14px;border-radius:14px;background:var(--paper);font-size:15px}
+.now.swap{animation:swapin .45s ease}
+@keyframes swapin{from{opacity:.2;transform:translateY(8px)}}
+.slist{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:6px;counter-reset:s}
+.slist button{width:100%;text-align:left;display:flex;gap:12px;align-items:center;border:0;background:transparent;border-radius:12px;padding:9px 10px;font:500 15px var(--font);color:#3A4152;cursor:pointer}
+.slist button:hover{background:var(--paper)}
+.slist .n{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--paper);font-size:13px;font-weight:700;color:var(--ink);transition:all .25s}
+.slist button.done .n{background:var(--lime)}
+.slist button.cur{background:var(--paper);color:var(--ink)}
+.slist button.cur .n{background:var(--blue);color:var(--white)}
+
+/* ---------- HELP ---------- */
+.help-grid{display:grid;gap:16px}
+@media (min-width:1000px){.help-grid{grid-template-columns:1fr 1fr}}
+.chat{background:var(--white);color:var(--ink);border-radius:var(--r-lg);padding:18px;display:flex;flex-direction:column;gap:8px}
+.chat-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.chat-head b{font-size:18px}
+.msg{max-width:86%;padding:10px 14px;border-radius:18px;font-size:16px;line-height:1.35}
+.msg small{display:block;font-size:12px;opacity:.7;margin-top:2px}
+.msg.them{align-self:flex-start;background:var(--paper);border-bottom-left-radius:6px}
+.msg.me{align-self:flex-end;background:var(--blue);color:var(--white);border-bottom-right-radius:6px}
+.msg.fast{letter-spacing:-.04em}
+.msg.show{animation:msgin .4s cubic-bezier(.3,1.3,.5,1)}
+@keyframes msgin{from{opacity:0;transform:translateY(10px) scale(.96)}}
+.typing{align-self:flex-start;background:var(--paper);border-radius:18px;padding:12px 16px;display:flex;gap:5px}
+.typing i{width:7px;height:7px;border-radius:50%;background:#9AA1B2;animation:tp 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes tp{50%{transform:translateY(-4px);opacity:.5}}
+.phr{display:grid;gap:10px}
+.phr h3{margin:6px 0 2px;font-size:20px;font-weight:600}
+.pcard{background:var(--white);color:var(--ink);border-radius:var(--r-md);padding:12px 12px 12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.pcard .de{font-weight:600;font-size:17px;line-height:1.25}
+.pcard .ru{font-size:14px;color:var(--muted)}
+.dan{border-left:3px solid var(--lime);padding:4px 0 4px 14px;font-size:15.5px;opacity:.92;margin:8px 0 0}
+
+/* ---------- QUIZ ---------- */
+.quiz-grid{display:grid;gap:16px}
+@media (min-width:1000px){.quiz-grid{grid-template-columns:1.2fr .9fr;align-items:start}}
+.bar{height:8px;border-radius:9px;background:var(--paper);overflow:hidden;margin-bottom:16px}
+.bar i{display:block;height:100%;width:0;background:var(--blue);border-radius:9px;transition:width .5s cubic-bezier(.3,.9,.3,1)}
+.qmeta{font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--muted)}
+.qtext{margin:6px 0 16px;font-size:clamp(22px,5.4vw,28px);font-weight:600;line-height:1.2;letter-spacing:-.015em}
+.qopts{display:grid;gap:8px}
+.qopt{width:100%;text-align:left;border:1.5px solid var(--hair);background:var(--white);border-radius:16px;padding:14px 16px;font:500 17px var(--font);color:var(--ink);cursor:pointer;transition:all .2s}
+.qopt:hover:not(:disabled){border-color:var(--blue)}
+.qopt:disabled{cursor:default}
+.qopt.ok{background:var(--lime);border-color:var(--lime)}
+.qopt.bad{background:#FFE4E1;border-color:var(--red)}
+.exp{margin-top:14px;padding:14px 16px;border-radius:16px;background:var(--paper);font-size:15.5px}
+.exp b{display:block;margin-bottom:2px}
+.qend{text-align:left}
+.qend .big{font-size:clamp(64px,16vw,110px);font-weight:400;letter-spacing:-.06em;line-height:.9;color:var(--blue)}
+.builder{background:var(--blue);color:var(--white);border-radius:var(--r-lg);padding:20px;display:flex;flex-direction:column;gap:14px}
+@media (min-width:900px){.builder{padding:28px}}
+.builder h3{margin:0;font-size:24px;font-weight:500;letter-spacing:-.02em}
+.builder .ru{margin:0;opacity:.85;font-size:15px}
+.slot{min-height:120px;border:2px dashed rgba(255,255,255,.5);border-radius:18px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;transition:all .3s}
+.slot.win{border-style:solid;border-color:var(--lime);background:rgba(180,236,92,.15)}
+.slot.nope{animation:shake .4s}
+.pool{display:flex;flex-wrap:wrap;gap:8px;min-height:48px}
+.chip{border:0;border-radius:12px;padding:10px 14px;background:var(--white);color:var(--ink);font:600 17px var(--font);cursor:pointer;transition:transform .15s}
+.chip:hover{transform:translateY(-2px)}
+.slot .chip{background:var(--lime)}
+.bmsg{min-height:1.5em;font-size:15px;margin:0}
+
+/* ---------- FAQ ---------- */
+.faq{display:grid;gap:12px}
+@media (min-width:900px){.faq{grid-template-columns:1fr 1fr;align-items:start}}
+.faq-col{display:grid;gap:12px}
+.fq{background:var(--white);color:var(--ink);border-radius:var(--r-lg)}
+.fq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:20px 20px 20px 22px;font-size:18px;font-weight:500;line-height:1.3;cursor:pointer}
+.fq summary::-webkit-details-marker{display:none}
+.fq .pm{flex:none;position:relative;width:36px;height:36px;border-radius:50%;background:var(--blue)}
+.fq .pm::before,.fq .pm::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:2.4px;margin:-1.2px 0 0 -7px;background:#fff;border-radius:2px;transition:transform .3s}
+.fq .pm::after{transform:rotate(90deg)}
+.fq[open] .pm::after{transform:rotate(0)}
+.fq p{margin:0;padding:0 22px 20px;color:var(--muted);font-size:15.5px}
+.fq p b{color:var(--ink);font-weight:600}
+
+/* ---------- STELLAS intro ---------- */
+.intro{display:grid;gap:28px}
+@media (min-width:1000px){.intro{grid-template-columns:1fr 1.1fr;gap:56px;align-items:center}}
+.logo-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.logo-row img{width:52px;height:52px;border-radius:14px}
+.logo-row span{font-weight:700;font-size:20px;letter-spacing:-.02em}
+.shot{position:relative;border-radius:var(--r-lg);overflow:hidden;background:var(--white);box-shadow:0 30px 60px -30px rgba(1,40,140,.45)}
+.shot img{width:100%;height:auto}
+.spot{position:absolute;left:10.3%;top:51.9%;width:19.1%;height:18.1%;border-radius:10px;box-shadow:0 0 0 3px var(--blue),0 0 0 9999px rgba(1,20,70,.28)}
+.spot::after{content:"";position:absolute;inset:-3px;border-radius:12px;border:3px solid var(--lime);animation:ring2 1.8s ease-out infinite}
+@keyframes ring2{from{transform:scale(1);opacity:1}to{transform:scale(1.25);opacity:0}}
+.spot-lbl{position:absolute;left:31%;top:56%;background:var(--lime);color:var(--ink);font-size:clamp(10px,2.4vw,14px);font-weight:700;padding:5px 10px;border-radius:999px;white-space:nowrap}
+
+/* pains */
+.pains{display:grid;gap:14px}
+@media (min-width:700px){.pains{grid-template-columns:repeat(2,1fr)}.pains .card:last-child{grid-column:1/-1}}
+@media (min-width:1150px){.pains{grid-template-columns:repeat(6,1fr)}.pains .card{grid-column:span 2}.pains .card:nth-child(n+4){grid-column:span 3}.pains .card:last-child{grid-column:span 3}}
+.pains .card h3{margin:0;font-size:24px;font-weight:600;line-height:1.15;letter-spacing:-.02em}
+.pains .card p{margin:0;font-size:15.5px;color:#30364A}
+.pains .card .fix{margin-top:2px;padding:12px 14px;border-radius:14px;background:var(--paper);font-size:15px}
+.pains .card .fix b{color:var(--blue)}
+.pains .card .num{font-size:clamp(64px,14vw,90px)}
+.money{margin-top:16px;display:grid;gap:14px;background:var(--lime);color:var(--ink);border-radius:var(--r-lg);padding:20px}
+@media (min-width:800px){.money{grid-template-columns:1fr auto;align-items:center;padding:24px 28px}}
+.money p{margin:0;font-size:clamp(20px,4.6vw,28px);font-weight:500;line-height:1.2;letter-spacing:-.015em}
+.money s{opacity:.55}
+
+/* inside */
+.bigstats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:30px}
+.showcase{display:grid;gap:16px;align-items:center;margin-bottom:22px}
+@media (min-width:900px){.showcase{grid-template-columns:auto 1fr;gap:28px}}
+.phone-v{width:min(250px,70%);margin:0 auto;border-radius:40px;background:#0B0B0B;padding:9px;box-shadow:0 30px 60px -30px rgba(1,40,140,.55)}
+.phone-v video{width:100%;border-radius:32px;aspect-ratio:858/1352;object-fit:cover;background:#fff}
+.frame{border-radius:var(--r-lg);background:#0B0B0B;padding:8px;box-shadow:0 30px 60px -30px rgba(1,40,140,.45)}
+.frame video{width:100%;border-radius:18px;aspect-ratio:2868/1368;object-fit:cover;background:#fff}
+.cap-row{display:grid;gap:10px;margin-top:14px}
+@media (min-width:700px){.cap-row{grid-template-columns:1fr 1fr}}
+.cap-row p{margin:0;font-size:15px;color:var(--muted)}
+.cap-row b{color:var(--ink)}
+.feat-grid{display:grid;gap:14px}
+@media (min-width:700px){.feat-grid{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1150px){.feat-grid{grid-template-columns:repeat(3,1fr)}}
+.fcard{background:var(--white);border-radius:var(--r-lg);padding:12px 12px 18px;display:flex;flex-direction:column;gap:10px}
+.fcard .media{border-radius:14px;overflow:hidden;background:var(--paper);aspect-ratio:1200/784}
+.fcard .media img,.fcard .media video{width:100%;height:100%;object-fit:cover;object-position:top center}
+.fcard h3{margin:4px 6px 0;font-size:20px;font-weight:600;letter-spacing:-.015em}
+.fcard p{margin:0 6px;font-size:15px;color:var(--muted)}
+.fcard .tagrow{display:flex;gap:6px;flex-wrap:wrap;margin:0 6px}
+
+/* reviews */
+.rev-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.rev-top p{margin:0;font-size:15px;opacity:.85}
+.arrows{display:flex;gap:8px}
+.arrows button{width:44px;height:44px;border-radius:50%;border:0;background:var(--white);color:var(--blue);display:grid;place-items:center;cursor:pointer}
+.arrows svg{width:20px;height:20px}
+.rev-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none}
+.rev-track::-webkit-scrollbar{display:none}
+.rev{flex:0 0 min(84%,420px);scroll-snap-align:start;background:var(--white);border-radius:var(--r-lg);padding:12px;display:flex;flex-direction:column;gap:10px}
+.rev img{border-radius:14px;width:100%;height:auto;background:#1E2530}
+.rev span{font-size:13px;color:var(--muted);padding:0 6px 4px}
+
+/* price */
+.price-grid{display:grid;gap:14px}
+@media (min-width:900px){.price-grid{grid-template-columns:repeat(3,1fr);align-items:stretch}}
+.plan{background:var(--white);border-radius:var(--r-lg);padding:22px;display:flex;flex-direction:column;gap:14px}
+.plan.feat{background:var(--blue);color:var(--white)}
+.plan h3{margin:0;font-size:22px;font-weight:600}
+.plan .lvl{font-size:14px;color:var(--muted)}
+.plan.feat .lvl{color:rgba(255,255,255,.8)}
+.plan .cost{font-size:clamp(58px,14vw,84px);font-weight:400;letter-spacing:-.05em;line-height:.9}
+.plan .cost s{font-size:.38em;letter-spacing:0;opacity:.6;margin-left:.2em}
+.plan ul{list-style:none;margin:0;padding:0;display:grid;gap:9px;font-size:15.5px}
+.plan li{display:flex;gap:10px;align-items:flex-start}
+.plan li svg{flex:none;width:20px;height:20px;margin-top:2px;color:var(--blue)}
+.plan.feat li svg{color:var(--lime)}
+.plan .btn{margin-top:auto;width:100%}
+.price-note{margin:16px 0 0;font-size:14.5px;color:var(--muted);text-align:center}
+
+/* cta circles */
+.cta{position:relative;text-align:center;padding-block:36px}
+.bubbles{display:flex;flex-wrap:nowrap;justify-content:center;align-items:center;gap:8px;margin:0 auto 22px;max-width:520px}
+.bubbles.bottom{margin:26px auto 0}
+.bub{flex:none;width:min(var(--s,86px),20vw);height:min(var(--s,86px),20vw);border-radius:50%;overflow:hidden;box-shadow:0 12px 26px -12px rgba(0,0,0,.4);animation:float 6s ease-in-out infinite;animation-delay:var(--d,0s)}
+.bub img{width:100%;height:100%;object-fit:cover}
+@keyframes float{50%{transform:translateY(-10px)}}
+.cta h2{margin:0 auto;max-width:12ch;font-weight:500;font-size:clamp(40px,10vw,76px);line-height:1;letter-spacing:-.045em;text-wrap:balance}
+.cta p{margin:16px auto 24px;max-width:38ch;color:#30364A;font-size:17px}
+@media (min-width:1000px){
+  .cta{min-height:620px;display:grid;place-content:center;padding-block:60px}
+  .cta>.btn{justify-self:center}
+  .bubbles{display:contents}
+  .bub{position:absolute;left:var(--x);top:var(--y);width:var(--S,120px);height:var(--S,120px)}
+}
+
+/* footer */
+.foot-box{border:1px solid rgba(255,255,255,.4);border-radius:var(--r-xl);padding:20px 18px 18px;color:var(--white)}
+.foot-top{display:flex;flex-wrap:wrap;gap:14px 24px;justify-content:space-between;align-items:center}
+.foot-top nav{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px}
+.foot-top nav a{text-decoration:none;opacity:.85}
+.foot-top nav a:hover{opacity:1}
+.soc{display:flex;gap:10px}
+.soc a{width:42px;height:42px;border-radius:50%;background:var(--lime);color:var(--ink);display:grid;place-items:center}
+.soc svg{width:21px;height:21px}
+.wordmark{margin:28px 0 8px;font-weight:500;letter-spacing:-.065em;line-height:.8;font-size:calc((100vw - 60px)/3.6);text-align:center;white-space:nowrap}
+@media (min-width:1440px){.wordmark{font-size:380px}}
+.copy{font-size:12.5px;text-align:center;opacity:.75;margin:10px 0 0}
+
+/* thanks */
+.thanks{display:grid;gap:24px;padding-bottom:0}
+.thanks h2{margin:0;font-weight:500;letter-spacing:-.06em;line-height:.86;font-size:clamp(66px,19vw,230px)}
+.thanks h2 .l{color:var(--lime)}
+.thanks-side{display:grid;gap:16px;align-content:start}
+.thanks-side p{margin:0;font-size:clamp(19px,4.6vw,26px);line-height:1.25;letter-spacing:-.01em;max-width:30ch}
+.thanks-side p b{color:var(--lime);font-weight:500}
+.contacts{display:flex;flex-wrap:wrap;gap:14px}
+.contacts a{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-size:18px;font-weight:500}
+.contacts a span.c{width:44px;height:44px;border-radius:50%;background:var(--lime);color:var(--ink);display:grid;place-items:center}
+.contacts svg{width:21px;height:21px}
+.thanks .post-wrap{margin-top:0;width:min(300px,78%);justify-self:start}
+@media (min-width:1000px){.thanks{grid-template-columns:1fr 1fr;align-items:end}.thanks h2{grid-column:1/-1}.thanks .post-wrap{justify-self:center}}
+
+/* floating cta */
+.float-cta{position:fixed;z-index:60;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translate(-50%,160%);display:flex;align-items:center;gap:10px;padding:8px 8px 8px 16px;border-radius:999px;background:var(--lime);color:var(--ink);text-decoration:none;font-weight:600;font-size:15px;box-shadow:0 14px 30px -10px rgba(0,0,0,.45);transition:transform .45s cubic-bezier(.3,1.2,.4,1);white-space:nowrap}
+.float-cta.show{transform:translate(-50%,0)}
+.float-cta .go{width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--lime);display:grid;place-items:center}
+.float-cta .go svg{width:18px;height:18px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important;scroll-behavior:auto!important}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-mark" viewBox="0 0 48 48"><path d="M5 21.5 41 6.5 26.5 42.5l-4.4-16.2z" fill="currentColor"/><path d="M38 29.5v13M31.5 36h13" stroke="var(--plus,#0A0A0A)" stroke-width="5" stroke-linecap="round"/></symbol>
+  <symbol id="i-sound" viewBox="0 0 24 24"><path d="M3.5 9.2v5.6h3.8l5 4.2V5l-5 4.2z" fill="currentColor"/><path d="M15.6 8.8a4.6 4.6 0 0 1 0 6.4M18.2 6.2a8.3 8.3 0 0 1 0 11.6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H5m6-6-6 6 6 6" stroke="currentColor" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
+  <symbol id="i-redo" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor" opacity=".16"/><path d="M7 12.4l3.3 3.3L17.2 8.8" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-tg" viewBox="0 0 24 24"><path d="M21.4 3.6 2.9 10.8c-1 .4-.9 1.6.1 1.9l4.6 1.4 1.8 5.5c.3.8 1.2 1 1.8.4l2.6-2.5 4.8 3.6c.7.5 1.6.1 1.8-.7L23 5c.2-1-.7-1.8-1.6-1.4zM9.8 14.3l8.2-7.2-6.3 8.6-.3 2.7z" fill="currentColor"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M12 2.6A9.4 9.4 0 0 0 3.9 16.8L2.6 21.4l4.7-1.2A9.4 9.4 0 1 0 12 2.6z" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M8.7 7.6c.3-.6.6-.6.9-.6h.6c.2 0 .5.1.6.5l.8 1.9c.1.3 0 .6-.2.8l-.6.7c-.2.2-.2.4-.1.6.8 1.4 1.9 2.4 3.3 3.1.2.1.5.1.6-.1l.8-.9c.2-.3.5-.3.8-.2l1.9.9c.3.1.4.4.4.6 0 .9-.6 1.9-1.7 2.1-1 .2-2.4 0-4.4-1.1-2.4-1.4-3.8-3.6-4.2-4.8-.4-1.1-.2-2.2.5-3.1z" fill="currentColor"/></symbol>
+</svg>
+
+<div class="site">
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="hero-card">
+    <nav class="nav" aria-label="Навигация">
+      <a class="brand" href="#top"><svg aria-hidden="true"><use href="#i-mark"/></svg>Stellas</a>
+      <div class="nav-links">
+        <a href="#ask">Спросить</a><a href="#zum">zum / zur</a><a href="#richtung">Направления</a><a href="#route">Маршрут</a><a href="#quiz">Тест</a><a href="#faq">FAQ</a>
+      </div>
+      <a class="btn blue sm" href="#stellas">Платформа</a>
+    </nav>
+    <p class="mega" aria-label="Wo ist der Bahnhof?">
+      <span class="ln"><span>Wo <span class="ti">ı</span>st der</span></span>
+      <span class="ln"><span>Bahnhof<span class="q">?</span></span></span>
+    </p>
+  </div>
+
+  <div class="hero-low">
+    <div class="post-wrap">
+      <svg class="post" viewBox="0 0 320 430" role="img" aria-label="Уличный указатель: Bahnhof, Rathaus, Apotheke, links">
+        <ellipse cx="160" cy="420" rx="74" ry="9" fill="rgba(0,0,0,.2)"/>
+        <rect class="pole" x="152" y="40" width="16" height="382" rx="8" fill="#0A0A0A"/>
+        <g class="sign s1" style="transform-origin:160px 90px"><path d="M166 62H286L312 90L286 118H166Z" fill="#014CFF" stroke="#0A0A0A" stroke-width="3"/><text x="182" y="98" font-size="23" font-weight="600" fill="#fff" font-family="Urbanist, system-ui, sans-serif">Bahnhof</text></g>
+        <g class="sign s2" style="transform-origin:160px 158px"><path d="M154 130H34L8 158L34 186H154Z" fill="#fff" stroke="#0A0A0A" stroke-width="3"/><text x="140" y="166" text-anchor="end" font-size="23" font-weight="600" fill="#0A0A0A" font-family="Urbanist, system-ui, sans-serif">Rathaus</text></g>
+        <g class="sign s3" style="transform-origin:160px 226px"><path d="M166 198H292L318 226L292 254H166Z" fill="#B4EC5C" stroke="#0A0A0A" stroke-width="3"/><text x="180" y="234" font-size="23" font-weight="600" fill="#0A0A0A" font-family="Urbanist, system-ui, sans-serif">Apotheke</text></g>
+        <g class="sign s4" style="transform-origin:160px 294px"><path d="M154 266H50L24 294L50 322H154Z" fill="#0A0A0A"/><text x="140" y="302" text-anchor="end" font-size="23" font-weight="600" fill="#B4EC5C" font-family="Urbanist, system-ui, sans-serif">links</text></g>
+        <circle class="cap" cx="160" cy="38" r="15" fill="#B4EC5C" stroke="#0A0A0A" stroke-width="4"/>
+      </svg>
+    </div>
+    <div class="hero-stat">
+      <b>A1–A2</b>
+      <span>Уровень темы. Нужна с первого дня в Германии.</span>
+    </div>
+    <div class="hero-pitch">
+      <h1>Спрашивать дорогу и объяснять маршрут.</h1>
+      <p>По-немецки. С картой, анимацией и одним человеком, который однажды пошел не туда.</p>
+      <a class="btn lime" href="#story">Начать урок <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= STORY ================= -->
+<section class="panel" id="story" aria-labelledby="story-h">
+  <div class="story">
+    <div>
+      <h2 id="story-h">Сначала история<span class="dot"></span></h2>
+      <div class="phone io" aria-hidden="true">
+        <div class="screen">
+          <div class="sbar"><span>8:15</span><span class="batt">1% <i></i></span></div>
+          <svg class="mini-map" viewBox="0 0 200 400" preserveAspectRatio="xMidYMid slice">
+            <rect width="200" height="400" fill="#F4F5F8"/>
+            <path d="M-10 120H210M-10 250H210M60 -10V410M150 -10V410M-10 330L210 190" stroke="#DDE2EA" stroke-width="16" fill="none"/>
+            <rect x="72" y="136" width="64" height="100" rx="8" fill="#B4EC5C" opacity=".55"/>
+            <path d="M60 330V250H150V120" stroke="#014CFF" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 9"/>
+            <g class="pinhop"><path d="M150 96c-9 0-15 7-15 15 0 11 15 24 15 24s15-13 15-24c0-8-6-15-15-15z" fill="#014CFF"/><circle cx="150" cy="111" r="5" fill="#fff"/></g>
+            <circle cx="60" cy="330" r="7" fill="#B4EC5C" stroke="#0A0A0A" stroke-width="2.5"/>
+          </svg>
+          <div class="toast"><b>Bahnhof</b>1,2 km · 15 Min. zu Fuß</div>
+          <div class="dead">0%</div>
+        </div>
+      </div>
+    </div>
+    <div class="story-text">
+      <p class="lead">Я переехал в Германию. В Германии есть <em class="hl">вокзал</em>. Вокзал я искал <em class="hl">сорок минут</em>.</p>
+      <div style="height:20px"></div>
+      <p>У меня был гугл-мапс. Гугл-мапс сел. Вместе с телефоном. В 8:15 утра, на перекрестке, с чемоданом.</p>
+      <p>Подхожу к мужику. Мужик в жилетке, с таксой. Говорю, экскузи. Он говорит, битте. Говорю, бахнхоф. Одно слово. Как пароль.</p>
+      <p>Мужик оживился. Мужик был рад помочь. Мужик объяснял минуты две. Показывал руками. Дергал таксу. Такса тоже что-то показывала.</p>
+      <p>Из всего я понял одно слово. Links. Думаю, блять, ну хоть что-то. Кивнул. Сказал данке. И уверенно пошел направо.</p>
+      <p class="punch">Вокзал я нашел. Поезд — нет.</p>
+      <div class="stats">
+        <div class="stat"><b><span class="io" data-count="40">40</span><small>мин</small></b><span>искал вокзал</span></div>
+        <div class="stat"><b><span class="io" data-count="1">1</span><small>слово</small></b><span>понял из ответа</span></div>
+        <div class="stat"><b><span class="io" data-count="180">180</span>°</b><span>промахнулся с направлением</span></div>
+      </div>
+      <p class="after">Этот урок — чтобы у вас таких цифр не было. Спрашивать будем <b>целым предложением</b>. Понимать — <b>больше одного слова</b>. Links — это налево. Запомнили? Я — со второго раза.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ASK ================= -->
+<section class="band" id="ask" aria-labelledby="ask-h">
+  <div class="sec-head">
+    <svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg>
+    <h2 id="ask-h">Как спросить<span class="dot"></span></h2>
+    <p>Четыре вопроса. Хватит на любой город. От Берлина до деревни, где один светофор и тот на ремонте.</p>
+  </div>
+  <div class="cards four">
+    <article class="card">
+      <div class="top"><span class="pill">Самый короткий</span><button class="say" data-say="Entschuldigung, wo ist der Bahnhof?" aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></div>
+      <p class="de">Entschuldigung, wo ist der Bahnhof?</p>
+      <p class="ru">Извините, где вокзал?</p>
+      <p class="card-note">Entschuldigung — обязательно. Без него это не вопрос. Это наезд.</p>
+      <div class="num">01.</div>
+    </article>
+    <article class="card feat">
+      <div class="top"><span class="pill">Самый нужный</span><button class="say" data-say="Wie komme ich zum Bahnhof?" aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></div>
+      <img src="media/street-wide.webp" alt="Улица в Берлине со входом в U-Bahn" width="574" height="276" loading="lazy">
+      <p class="de">Wie komme ich <span class="hl-b">zum</span> Bahnhof?</p>
+      <p class="ru">Как мне пройти к вокзалу?</p>
+      <p class="card-note">Буквально: как я приду к вокзалу. Тут спрятан zum. Про него ниже, он того стоит.</p>
+      <div class="num">02.</div>
+    </article>
+    <article class="card">
+      <div class="top"><span class="pill">Если не уверен, что оно есть</span><button class="say" data-say="Gibt es hier in der Nähe eine Apotheke?" aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></div>
+      <p class="de">Gibt es hier in der Nähe <span class="hl-b">eine</span> Apotheke?</p>
+      <p class="ru">Здесь поблизости есть аптека?</p>
+      <p class="card-note">eine, а не die. Вам не нужна конкретная аптека. Вам нужна любая. Желательно открытая.</p>
+      <div class="num">03.</div>
+    </article>
+    <article class="card">
+      <div class="top"><span class="pill">Главный вопрос</span><button class="say" data-say="Ist das weit von hier?" aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></div>
+      <p class="de">Ist das weit von hier?</p>
+      <p class="ru">Это далеко отсюда?</p>
+      <p class="card-note">Немец ответит: nicht weit. Не верьте. Уточните: <b>Wie lange dauert das zu Fuß?</b> — сколько идти пешком.</p>
+      <div class="num">04.</div>
+    </article>
+  </div>
+  <div class="strip">
+    <button class="say" data-say="Könnten Sie mir bitte sagen, wo der Bahnhof ist?" aria-label="Послушать" style="background:var(--ink);color:var(--lime)"><svg><use href="#i-sound"/></svg></button>
+    <p><b>Вежливый апгрейд:</b> Könnten Sie mir bitte sagen, wo der Bahnhof <b>ist</b>? — ist уезжает в конец. Придаточное. Немцы так любят. Звучит как человек, который знает Konjunktiv. Вы теперь знаете.</p>
+  </div>
+</section>
+
+<!-- ================= ZUM / ZUR ================= -->
+<section class="panel" id="zum" aria-labelledby="zum-h">
+  <div class="sec-head">
+    <svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg>
+    <h2 id="zum-h">zum или zur<span class="dot"></span></h2>
+    <p>zu всегда тащит за собой Dativ. А немцы не любят лишние буквы. Поэтому склеивают. Смотрите по шагам.</p>
+  </div>
+  <div class="zum-grid">
+    <div class="box">
+      <div class="tabs" role="tablist" aria-label="Пример">
+        <button class="tab" role="tab" aria-selected="true" data-z="m">der Bahnhof</button>
+        <button class="tab" role="tab" aria-selected="false" data-z="f">die Post</button>
+        <button class="tab" role="tab" aria-selected="false" data-z="n">das Rathaus</button>
+        <button class="tab" role="tab" aria-selected="false" data-z="p">die Toiletten</button>
+      </div>
+      <p class="zstage merged" id="zstage" aria-live="polite">Wie komme ich <span class="glue"><span class="w-zu">zu</span><span class="gap"></span><span class="art"><span class="a-drop">de</span><span class="a-keep">m</span></span></span> <span class="noun">Bahnhof</span>?<span class="nobadge">не склеивается</span></p>
+      <div class="phases" aria-hidden="true"><span class="ph on">1. Nominativ</span><span class="ph on">2. Dativ</span><span class="ph on">3. Склейка</span></div>
+      <p class="zcap" id="zcap">zu + dem = zum. Две буквы исчезли. Никто не заметил.</p>
+      <div class="ctrl">
+        <button class="btn blue sm" id="zplay"><svg aria-hidden="true"><use href="#i-play"/></svg>Проиграть</button>
+        <button class="btn ghost sm" id="zprev" aria-label="Шаг назад"><svg aria-hidden="true"><use href="#i-left"/></svg></button>
+        <button class="btn ghost sm" id="znext" aria-label="Шаг вперед"><svg aria-hidden="true"><use href="#i-right"/></svg></button>
+        <button class="say" id="zsay" data-say="Wie komme ich zum Bahnhof?" aria-label="Послушать"><svg><use href="#i-sound"/></svg></button>
+      </div>
+      <div class="formulas">
+        <div class="fm"><b>zu + dem = zum</b><span>der и das: zum Bahnhof, zum Rathaus</span></div>
+        <div class="fm"><b>zu + der = zur</b><span>die: zur Post, zur Apotheke</span></div>
+        <div class="fm no"><b>zun</b><span>Множественное: zu den Toiletten. Не клеится.</span></div>
+      </div>
+    </div>
+    <div class="game" id="game">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h3>Потренируйтесь</h3><span class="score" id="gscore">0 / 8</span></div>
+      <p class="gq" id="gq">Wie komme ich <span class="blank">___</span> Apotheke?</p>
+      <p class="ghint" id="ghint">Подсказка: die Apotheke</p>
+      <div class="opts"><button class="opt" data-a="zum">zum</button><button class="opt" data-a="zur">zur</button></div>
+      <p class="gfb" id="gfb" aria-live="polite">Я сначала думал, zum и zur — это два разных слова. Как Zoom и Uber. Нет. Это zu, который съел артикль.</p>
+      <button class="btn lime sm" id="gnext" hidden>Дальше <svg aria-hidden="true"><use href="#i-right"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DIRECTIONS ================= -->
+<section class="band" id="richtung" aria-labelledby="dir-h">
+  <div class="sec-head">
+    <svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg>
+    <h2 id="dir-h">Куда идти<span class="dot"></span></h2>
+    <p>Двенадцать слов. На них держится любой маршрут. Нажмите на карточку — услышите, как это звучит.</p>
+  </div>
+  <div class="dir-grid io">
+    <button class="dcard" data-say="geradeaus"><span class="ico"><svg viewBox="0 0 48 48"><g class="mv m-up"><path class="st" d="M24 40V10"/><path class="lm" d="M15 19l9-9 9 9"/></g></svg></span><b>geradeaus</b><small>прямо</small></button>
+    <button class="dcard" data-say="links"><span class="ico"><svg viewBox="0 0 48 48"><path class="st mv m-draw" d="M32 42V26c0-5-3-8-8-8H10"/><path class="lm" d="M17 11l-7 7 7 7"/></svg></span><b>links</b><small>налево. Налево!</small></button>
+    <button class="dcard" data-say="rechts"><span class="ico"><svg viewBox="0 0 48 48"><path class="st mv m-draw" d="M16 42V26c0-5 3-8 8-8h14"/><path class="lm" d="M31 11l7 7-7 7"/></svg></span><b>rechts</b><small>направо</small></button>
+    <button class="dcard" data-say="zurück"><span class="ico"><svg viewBox="0 0 48 48"><path class="st mv m-draw" d="M14 42V20a9 9 0 0 1 18 0v12"/><path class="lm" d="M25 26l7 7 7-7"/></svg></span><b>zurück</b><small>назад</small></button>
+    <button class="dcard" data-say="bis zur Ampel"><span class="ico"><svg viewBox="0 0 48 48"><rect class="st" x="16" y="5" width="16" height="38" rx="6"/><circle class="mv m-light" cx="24" cy="14" r="4" fill="#FF5A4E"/><circle class="mv m-light d2" cx="24" cy="24" r="4" fill="#FFD23F"/><circle class="mv m-light d3" cx="24" cy="34" r="4" fill="#B4EC5C"/></svg></span><span class="case">bis zu + Dativ</span><b>bis zur Ampel</b><small>до светофора</small></button>
+    <button class="dcard" data-say="an der Kreuzung"><span class="ico"><svg viewBox="0 0 48 48"><path class="st" d="M24 5v38M5 24h38"/><circle class="lf mv m-pulse" cx="24" cy="24" r="5"/></svg></span><span class="case">an + Dativ</span><b>an der Kreuzung</b><small>на перекрестке</small></button>
+    <button class="dcard" data-say="die erste Straße links"><span class="ico"><svg viewBox="0 0 48 48"><path class="st" d="M30 44V4M30 14H14"/><path class="lm mv m-draw" d="M30 32H10"/><circle class="lf" cx="38" cy="32" r="4"/></svg></span><b>die erste Straße links</b><small>первая улица налево</small></button>
+    <button class="dcard" data-say="über die Brücke"><span class="ico"><svg viewBox="0 0 48 48"><path class="st" d="M5 28h38M8 28q16-18 32 0"/><g class="mv m-wave"><path class="lm" d="M6 38q4-4 8 0t8 0 8 0 8 0 8 0"/></g></svg></span><span class="case">über + Akkusativ</span><b>über die Brücke</b><small>через мост</small></button>
+    <button class="dcard" data-say="durch den Park"><span class="ico"><svg viewBox="0 0 48 48"><g class="mv m-sway"><circle class="lf" cx="24" cy="18" r="11"/><path class="st" d="M24 28v14"/></g></svg></span><span class="case">durch + Akkusativ</span><b>durch den Park</b><small>через парк</small></button>
+    <button class="dcard" data-say="gegenüber vom Supermarkt"><span class="ico"><svg viewBox="0 0 48 48"><rect class="st" x="4" y="14" width="12" height="20" rx="3"/><rect x="32" y="14" width="12" height="20" rx="3" class="lf"/><path class="lm mv m-lr" d="M20 24h8"/></svg></span><span class="case">+ Dativ</span><b>gegenüber</b><small>напротив</small></button>
+    <button class="dcard" data-say="neben der Post"><span class="ico"><svg viewBox="0 0 48 48"><rect class="st" x="6" y="14" width="16" height="22" rx="3"/><rect class="lf mv m-pulse" x="26" y="18" width="16" height="18" rx="3"/></svg></span><span class="case">neben + Dativ</span><b>neben der Post</b><small>рядом с почтой</small></button>
+    <button class="dcard" data-say="an der Ecke"><span class="ico"><svg viewBox="0 0 48 48"><path class="st" d="M12 6v30h30"/><circle class="lf mv m-pulse" cx="12" cy="36" r="5"/></svg></span><span class="case">an + Dativ</span><b>an der Ecke</b><small>на углу</small></button>
+  </div>
+  <div class="cases">
+    <div class="case-card"><h3>Стоите где-то → Dativ</h3><p><code>an der Ampel</code>, <code>an der Ecke</code>, <code>neben der Post</code>. Вопрос «где?». Отвечает Dativ.</p></div>
+    <div class="case-card"><h3>Идете сквозь или через → Akkusativ</h3><p><code>durch den Park</code>, <code>über die Brücke</code>, <code>über die Straße</code>. durch вообще не спрашивает. Всегда Akkusativ.</p></div>
+    <div class="case-card"><h3>До какой-то точки → bis zu</h3><p><code>bis zur Ampel</code>, <code>bis zum Marktplatz</code>. Опять zu. Опять склейка. Вы уже умеете.</p></div>
+  </div>
+</section>
+
+<!-- ================= IMPERATIVE ================= -->
+<section class="panel" id="erklaeren" aria-labelledby="imp-h">
+  <div class="sec-head">
+    <svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg>
+    <h2 id="imp-h">Как объяснить<span class="dot"></span></h2>
+    <p>Объяснять маршрут — значит командовать. Вежливо. Глагол вперед, Sie сразу за ним. И одна приставка, которая сбегает.</p>
+  </div>
+  <div class="imp-grid">
+    <div class="box">
+      <span class="fcount" id="fcount">ШАГ 4 / 5</span>
+      <div class="fstage" id="fstage" aria-live="polite">
+        <span class="tk v" data-k="verb">Biegen</span>
+        <span class="tk" data-k="sie">Sie</span>
+        <span class="tk" data-k="where">an der Ampel</span>
+        <span class="tk" data-k="dir">links</span>
+        <span class="tk pre" data-k="ab">ab.</span>
+      </div>
+      <p class="fcap" id="fcap">Между глаголом и ab — всё остальное: где и куда. Готово. Вы только что объяснили дорогу.</p>
+      <div class="ctrl">
+        <button class="btn blue sm" id="fplay"><svg aria-hidden="true"><use href="#i-play"/></svg>Разобрать с нуля</button>
+        <button class="btn ghost sm" id="fprev" aria-label="Шаг назад"><svg aria-hidden="true"><use href="#i-left"/></svg></button>
+        <button class="btn ghost sm" id="fnext" aria-label="Шаг вперед"><svg aria-hidden="true"><use href="#i-right"/></svg></button>
+        <button class="say" id="fsay" data-say="Biegen Sie an der Ampel links ab." aria-label="Послушать"><svg><use href="#i-sound"/></svg></button>
+      </div>
+    </div>
+    <div class="box">
+      <div class="seg" role="group" aria-label="Форма обращения">
+        <button aria-pressed="true" data-form="sie">Sie · вежливо</button>
+        <button aria-pressed="false" data-form="du">du · своим</button>
+      </div>
+      <ul class="plist" id="plist">
+        <li data-sie="&lt;i&gt;Gehen&lt;/i&gt; Sie geradeaus.|Gehen Sie geradeaus." data-du="&lt;i&gt;Geh&lt;/i&gt; geradeaus.|Geh geradeaus." data-ru="Идите прямо."><div><div class="de"><i>Gehen</i> Sie geradeaus.</div><div class="ru">Идите прямо.</div></div><button class="say" data-say="Gehen Sie geradeaus." aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></li>
+        <li data-sie="&lt;i&gt;Biegen&lt;/i&gt; Sie links &lt;u&gt;ab&lt;/u&gt;.|Biegen Sie links ab." data-du="&lt;i&gt;Bieg&lt;/i&gt; links &lt;u&gt;ab&lt;/u&gt;.|Bieg links ab." data-ru="Сверните налево."><div><div class="de"><i>Biegen</i> Sie links <u>ab</u>.</div><div class="ru">Сверните налево.</div></div><button class="say" data-say="Biegen Sie links ab." aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></li>
+        <li data-sie="&lt;i&gt;Nehmen&lt;/i&gt; Sie die zweite Straße rechts.|Nehmen Sie die zweite Straße rechts." data-du="&lt;i&gt;Nimm&lt;/i&gt; die zweite Straße rechts.|Nimm die zweite Straße rechts." data-ru="Вторая улица направо."><div><div class="de"><i>Nehmen</i> Sie die zweite Straße rechts.</div><div class="ru">Вторая улица направо.</div></div><button class="say" data-say="Nehmen Sie die zweite Straße rechts." aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></li>
+        <li data-sie="&lt;i&gt;Fahren&lt;/i&gt; Sie mit der U2 bis zum Marktplatz.|Fahren Sie mit der U2 bis zum Marktplatz." data-du="&lt;i&gt;Fahr&lt;/i&gt; mit der U2 bis zum Marktplatz.|Fahr mit der U2 bis zum Marktplatz." data-ru="Езжайте на U2 до рыночной площади."><div><div class="de"><i>Fahren</i> Sie mit der U2 bis zum Marktplatz.</div><div class="ru">Езжайте на U2 до рыночной площади.</div></div><button class="say" data-say="Fahren Sie mit der U2 bis zum Marktplatz." aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></li>
+        <li data-sie="&lt;i&gt;Überqueren&lt;/i&gt; Sie die Straße.|Überqueren Sie die Straße." data-du="&lt;i&gt;Überquer&lt;/i&gt; die Straße.|Überquer die Straße." data-ru="Перейдите улицу."><div><div class="de"><i>Überqueren</i> Sie die Straße.</div><div class="ru">Перейдите улицу.</div></div><button class="say" data-say="Überqueren Sie die Straße." aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></li>
+      </ul>
+      <p class="card-note" style="margin:14px 0 0">nehmen в du-форме — nimm. Не nehm. Немцы решили, что так красивее. Спорить с ними я пробовал. Не советую.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ROUTE ================= -->
+<section class="panel white" id="route" aria-labelledby="route-h">
+  <div class="sec-head">
+    <svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg>
+    <h2 id="route-h">Маршрут<span class="dot"></span></h2>
+    <p>Вы спросили. Вам объяснили. Теперь пройдем это вместе. По шагам. Налево — это налево.</p>
+  </div>
+  <div class="route-grid">
+    <div class="map-card" style="background:var(--paper)">
+      <svg class="map" id="map" viewBox="0 0 360 460" role="img" aria-label="Схема маршрута от точки «Sie sind hier» до вокзала">
+        <rect width="360" height="460" rx="16" fill="#F7F8FA"/>
+        <g stroke="#DCE1EA" stroke-width="20" stroke-linecap="round" fill="none">
+          <path d="M180 470V130"/><path d="M-10 330H370"/><path d="M120 470V252"/><path d="M60 470V246"/>
+          <path d="M-10 130H370"/><path d="M250 130V-10"/><path d="M320 470V130"/><path d="M-10 400H370"/><path d="M60 130V-10"/>
+        </g>
+        <rect x="0" y="84" width="360" height="30" fill="#014CFF" opacity=".16"/>
+        <path d="M10 99q10-6 20 0t20 0 20 0 20 0 20 0 20 0 20 0 20 0 20 0 20 0 20 0 20 0 20 0 20 0 20 0 20 0 20 0" stroke="#014CFF" stroke-opacity=".35" stroke-width="2" fill="none"/>
+        <text x="16" y="79" font-size="11" font-weight="600" fill="#014CFF" opacity=".7">Fluss</text>
+        <g id="lm-bridge"><rect x="236" y="78" width="28" height="42" rx="4" fill="#fff" stroke="#0A0A0A" stroke-width="2.5"/><path d="M236 88h28M236 110h28" stroke="#0A0A0A" stroke-width="1.5"/><circle class="lm-ring" cx="250" cy="99" r="28"/><text x="272" y="124" font-size="11" font-weight="600" fill="#0A0A0A">Brücke</text></g>
+        <g id="lm-park"><rect x="28" y="150" width="138" height="92" rx="16" fill="#B4EC5C" opacity=".55"/><circle cx="48" cy="170" r="9" fill="#8FCB3A"/><circle cx="140" cy="222" r="10" fill="#8FCB3A"/><circle cx="130" cy="168" r="7" fill="#8FCB3A"/><circle cx="46" cy="222" r="7" fill="#8FCB3A"/><path d="M60 242L155 146" stroke="#fff" stroke-width="7" stroke-dasharray="1 9" stroke-linecap="round"/><text x="86" y="200" font-size="12" font-weight="700" fill="#0A0A0A">Park</text><circle class="lm-ring" cx="97" cy="196" r="50"/></g>
+        <g id="lm-bahnhof"><rect x="146" y="12" width="92" height="54" rx="10" fill="#014CFF"/><text x="192" y="44" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Bahnhof</text><circle class="lm-ring" cx="192" cy="39" r="40"/></g>
+        <g id="lm-markt"><rect x="264" y="12" width="84" height="54" rx="10" fill="#0A0A0A"/><text x="306" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#B4EC5C">Supermarkt</text><circle class="lm-ring" cx="306" cy="39" r="36"/></g>
+        <g id="lm-ampel"><rect x="194" y="300" width="12" height="28" rx="4" fill="#0A0A0A"/><circle cx="200" cy="307" r="3" fill="#FF5A4E"/><circle cx="200" cy="314" r="3" fill="#FFD23F"/><circle cx="200" cy="321" r="3" fill="#B4EC5C"/><text x="212" y="318" font-size="11" font-weight="600" fill="#0A0A0A">Ampel</text><circle class="lm-ring" cx="186" cy="326" r="22"/></g>
+        <g class="snum"><circle cx="120" cy="352" r="11" fill="#B4EC5C" stroke="#0A0A0A" stroke-width="2"/><text x="120" y="356.5" text-anchor="middle" font-size="12" font-weight="800">1</text></g>
+        <g class="snum"><circle cx="60" cy="352" r="11" fill="#B4EC5C" stroke="#0A0A0A" stroke-width="2"/><text x="60" y="356.5" text-anchor="middle" font-size="12" font-weight="800">2</text></g>
+        <path id="ghost" fill="none" stroke="#014CFF" stroke-opacity=".22" stroke-width="5" stroke-dasharray="2 8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path id="rpath" fill="none" stroke="#014CFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="start"><rect x="126" y="436" width="108" height="20" rx="10" fill="#0A0A0A"/><text x="180" y="450" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Sie sind hier</text></g>
+        <g id="walker" transform="translate(180 440)"><circle r="12" fill="#B4EC5C" stroke="#0A0A0A" stroke-width="3"/><path id="warrow" d="M0 -6L5 4H-5Z" fill="#0A0A0A"/></g>
+      </svg>
+    </div>
+    <div class="box" style="background:var(--paper)">
+      <div class="now" id="now">
+        <span class="count" id="rcount">СТАРТ · ШАГ 0 / 6</span>
+        <div class="de-row"><p class="de" id="rde">Entschuldigung, wie komme ich zum Bahnhof?</p><button class="say" id="rsay" data-say="Entschuldigung, wie komme ich zum Bahnhof?" aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></div>
+        <p class="ru" id="rru">Извините, как пройти к вокзалу?</p>
+        <p class="note" id="rnote">Это вы. Вы молодец. Вы спросили целым предложением. Дальше — ответ прохожего.</p>
+      </div>
+      <div class="ctrl" style="margin-top:16px">
+        <button class="btn blue sm" id="rnext">Дальше <svg aria-hidden="true"><use href="#i-right"/></svg></button>
+        <button class="btn ghost sm" id="rprev" aria-label="Шаг назад"><svg aria-hidden="true"><use href="#i-left"/></svg></button>
+        <button class="btn ghost sm" id="rplay"><svg aria-hidden="true"><use href="#i-play"/></svg>Весь маршрут</button>
+      </div>
+      <ol class="slist" id="slist"></ol>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HELP ================= -->
+<section class="band" id="hilfe" aria-labelledby="help-h">
+  <div class="sec-head">
+    <svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg>
+    <h2 id="help-h">Если не понял<span class="dot"></span></h2>
+    <p>Немцы объясняют быстро. Это нормально. Ненормально — кивнуть и пойти направо. Проверено.</p>
+  </div>
+  <div class="help-grid">
+    <div class="chat" id="chat">
+      <div class="chat-head"><b>Как это звучит вживую</b><button class="btn blue sm" id="creplay"><svg aria-hidden="true"><use href="#i-redo"/></svg>Проиграть</button></div>
+      <div class="msg them fast">Da vorne links, dann die dritte rechts, am Kreisverkehr geradeaus und dann…<small>прохожий, 140 слов в минуту</small></div>
+      <div class="msg me">Entschuldigung, wie bitte?</div>
+      <div class="msg them fast">Da vorne links, dann die dritte rechts, am Kreisverkehr…<small>то же самое. С той же скоростью.</small></div>
+      <div class="msg me">Etwas langsamer, bitte.</div>
+      <div class="msg them">Links. Dann. Die dritte. Rechts.<small>вот теперь понятно</small></div>
+      <div class="msg me">Können Sie mir das auf der Karte zeigen?</div>
+      <div class="msg them">Klar! Hier. Zehn Minuten zu Fuß.</div>
+      <div class="msg me">Vielen Dank!</div>
+    </div>
+    <div class="phr">
+      <h3>Вы не поняли</h3>
+      <div class="pcard"><div><div class="de">Wie bitte?</div><div class="ru">Простите, что?</div></div><button class="say" data-say="Wie bitte?" aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></div>
+      <div class="pcard"><div><div class="de">Können Sie das bitte wiederholen?</div><div class="ru">Повторите, пожалуйста.</div></div><button class="say" data-say="Können Sie das bitte wiederholen?" aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></div>
+      <div class="pcard"><div><div class="de">Etwas langsamer, bitte.</div><div class="ru">Чуть помедленнее, пожалуйста.</div></div><button class="say" data-say="Etwas langsamer, bitte." aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></div>
+      <div class="pcard"><div><div class="de">Können Sie mir das auf der Karte zeigen?</div><div class="ru">Покажете на карте?</div></div><button class="say" data-say="Können Sie mir das auf der Karte zeigen?" aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></div>
+      <h3>Спрашивают вас</h3>
+      <div class="pcard"><div><div class="de">Tut mir leid, ich bin nicht von hier.</div><div class="ru">Извините, я не местный.</div></div><button class="say" data-say="Tut mir leid, ich bin nicht von hier." aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></div>
+      <div class="pcard"><div><div class="de">Das ist ganz in der Nähe.</div><div class="ru">Это совсем рядом.</div></div><button class="say" data-say="Das ist ganz in der Nähe." aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></div>
+      <div class="pcard"><div><div class="de">Etwa fünf Minuten zu Fuß.</div><div class="ru">Минут пять пешком.</div></div><button class="say" data-say="Etwa fünf Minuten zu Fuß." aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></div>
+      <div class="pcard"><div><div class="de">Nehmen Sie am besten den Bus Nummer 12.</div><div class="ru">Лучше садитесь на 12-й автобус.</div></div><button class="say" data-say="Nehmen Sie am besten den Bus Nummer zwölf." aria-label="Послушать"><svg><use href="#i-sound"/></svg></button></div>
+      <p class="dan">Переспросить — не стыдно. Немцы переспрашивают друг друга постоянно. Стыдно — кивать две минуты, а потом стоять на вокзале и смотреть, как уезжает твой поезд.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= QUIZ ================= -->
+<section class="panel" id="quiz" aria-labelledby="quiz-h">
+  <div class="sec-head">
+    <svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg>
+    <h2 id="quiz-h">Проверь себя<span class="dot"></span></h2>
+    <p>Шесть вопросов. После каждого — разбор: почему так, а не иначе. Как на платформе.</p>
+  </div>
+  <div class="quiz-grid">
+    <div class="box" id="qbox" aria-live="polite"></div>
+    <div class="builder">
+      <h3>Соберите фразу</h3>
+      <p class="ru">«Сверните на светофоре налево». Нажимайте на слова по порядку.</p>
+      <div class="slot" id="slot" aria-label="Ваша фраза"></div>
+      <div class="pool" id="pool"></div>
+      <p class="bmsg" id="bmsg" aria-live="polite"></p>
+      <div class="ctrl"><button class="btn lime sm" id="bcheck">Проверить</button><button class="btn ghost sm" id="breset">Сначала</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="band" id="faq" aria-labelledby="faq-h">
+  <div class="sec-head">
+    <svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg>
+    <h2 id="faq-h">FAQ<span class="dot"></span></h2>
+    <p>Вопросы, которые мне задавали. И которые я задавал сам. Иногда вслух, на улице.</p>
+  </div>
+  <div class="faq">
+    <div class="faq-col">
+      <details class="fq" open><summary>Можно просто сказать «Bahnhof?» и всё?<span class="pm"></span></summary><p>Можно. Вас поймут. Но ответ будет таким же коротким: рукой. Хотите нормальный ответ — задайте нормальный вопрос: <b>Wie komme ich zum Bahnhof?</b> Пять слов. Сорок минут экономии.</p></details>
+      <details class="fq"><summary>Sie или du — как обращаться к прохожему?<span class="pm"></span></summary><p>К незнакомым взрослым — <b>Sie</b>. Всегда. du — детям, друзьям и в Берлине после двух ночи. Сомневаетесь — Sie. Никто еще не обиделся на Sie.</p></details>
+      <details class="fq"><summary>Чем zu отличается от nach?<span class="pm"></span></summary><p><b>nach</b> — города, страны и направления без артикля: nach Berlin, nach Hause, nach links. <b>zu</b> — места и люди: zum Bahnhof, zur Post, zum Arzt. «Nach Bahnhof» — ошибка. Частая. Я делал.</p></details>
+      <details class="fq"><summary>links abbiegen или nach links abbiegen?<span class="pm"></span></summary><p>Оба правильно. nach links — чуть подробнее. Смысл один: налево. Главное — не направо.</p></details>
+    </div>
+    <div class="faq-col">
+      <details class="fq"><summary>Как спросить про транспорт?<span class="pm"></span></summary><p><b>Welcher Bus fährt zum Bahnhof?</b> — какой автобус идет до вокзала. <b>Wo ist die nächste Haltestelle?</b> — где ближайшая остановка. <b>Muss ich umsteigen?</b> — нужна пересадка?</p></details>
+      <details class="fq"><summary>gegenüber vom или gegenüber dem?<span class="pm"></span></summary><p>По правилу: <b>gegenüber dem Supermarkt</b>, это Dativ. В разговоре немцы часто говорят <b>gegenüber vom</b>. Оба варианта живые. Вас поймут в обоих случаях.</p></details>
+      <details class="fq"><summary>Что делать, если опять ничего не понял?<span class="pm"></span></summary><p>Открыть свою карту и спросить: <b>Hier?</b> Немцы любят показывать пальцем в чужой телефон. Это их тайная страсть. Если телефон сел — см. историю выше.</p></details>
+      <details class="fq"><summary>Какой это уровень?<span class="pm"></span></summary><p>A1–A2. Тема постоянно всплывает в разговорной части экзаменов. Попросят спросить дорогу или объяснить. Теперь сможете и то, и другое.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STELLAS INTRO ================= -->
+<section class="panel" id="stellas" aria-labelledby="st-h">
+  <div class="intro">
+    <div>
+      <div class="logo-row"><img src="media/logo.png" alt="" width="52" height="52"><span>Stellas</span></div>
+      <h2 id="st-h" class="lead" style="margin:0 0 22px">Этот урок — <em class="hl">кусочек</em>. Кусочек гайда «На улице, спросить дорогу». Гайд лежит на платформе. Таких гайдов там <em class="hl">340+</em>.</h2>
+      <div class="story-text">
+        <p>У меня был Duolingo. Duolingo у меня был 412 дней подряд. Сова мной гордилась. Сова присылала огонечки.</p>
+        <p>Потом у меня спросили дорогу. Меня. Немецкая бабушка. Я сказал Entschuldigung. И показал рукой.</p>
+        <p>Бабушка ушла туда, куда я показал.</p>
+        <p class="punch">Я до сих пор не знаю, дошла ли она. Сова тоже не знает.</p>
+      </div>
+    </div>
+    <figure class="shot" style="margin:0">
+      <img src="media/p7-work.webp" alt="Раздел лексики на платформе Stellas: «Повседневное общение и город», карточка «На улице, спросить дорогу»" width="1200" height="784" loading="lazy">
+      <span class="spot" aria-hidden="true"></span>
+      <span class="spot-lbl">← этот урок</span>
+    </figure>
+  </div>
+</section>
+
+<!-- ================= PAINS ================= -->
+<section class="band" id="warum" aria-labelledby="pain-h">
+  <div class="sec-head">
+    <svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg>
+    <h2 id="pain-h">Почему не выходит<span class="dot"></span></h2>
+    <p>Не потому что вы не способны. Потому что учите не там и не так. Пять причин. Узнаете хотя бы одну.</p>
+  </div>
+  <div class="pains">
+    <article class="card">
+      <span class="pill">Приложения</span>
+      <h3>412 дней в приложении. Ноль разговоров.</h3>
+      <p>Слова без ситуации не всплывают, когда нужно. Apfel вы знаете. Как спросить, где яблоки, — нет.</p>
+      <p class="fix"><b>На платформе:</b> лексика по ситуациям — улица, транспорт, больница, работа. Готовые фразы, диалоги и 7500+ слов с озвучкой и транскрипцией.</p>
+      <div class="num">01.</div>
+    </article>
+    <article class="card">
+      <span class="pill">Курсы</span>
+      <h3>90 минут урока. Говорите вы четыре.</h3>
+      <p>Группа из 15 человек. Созвон в неудобное время. Олег опять рассказывает про выходные.</p>
+      <p class="fix"><b>На платформе:</b> ваш темп и ваше время. Каждый гайд: объяснение, видео, упражнения и разбор ответов. Без Олега.</p>
+      <div class="num">02.</div>
+    </article>
+    <article class="card">
+      <span class="pill">Учебники</span>
+      <h3>Грамматику объясняют как налоговый кодекс.</h3>
+      <p>Таблицы, исключения, сноски к исключениям. Закрыли книгу — забыли всё.</p>
+      <p class="fix"><b>На платформе:</b> 340+ гайдов от A0 до C1, объясненных так же, как этот урок. К гайдам есть интерактивные версии: озвучка, упражнения, проверка ИИ.</p>
+      <div class="num">03.</div>
+    </article>
+    <article class="card">
+      <span class="pill">U-Bahn</span>
+      <h3>В метро нет интернета. А время есть.</h3>
+      <p>Двадцать минут в U-Bahn. Приложение крутит загрузку. Вы смотрите в окно. В окне туннель.</p>
+      <p class="fix"><b>На платформе:</b> всё в Notion. Скачали приложение — занимаетесь оффлайн, с телефона или ноутбука.</p>
+      <div class="num">04.</div>
+    </article>
+    <article class="card">
+      <span class="pill">Экзамен</span>
+      <h3>Экзамен через три месяца. Материалы в сорока вкладках.</h3>
+      <p>Тут тест, там аудио, в третьем месте образец письма. Половину закладок вы уже не найдете.</p>
+      <p class="fix"><b>На платформе:</b> раздел «Экзамены» — Goethe, telc, DTZ, ÖSD, TestDaF. Плюс трекер прогресса, флеш-карты, фильмы, книги и подкасты, отсортированные по уровню.</p>
+      <div class="num">05.</div>
+    </article>
+  </div>
+  <div class="money">
+    <p>Час с репетитором — 30–40 €. Платформа A0–C1 — <b>30 €</b>. Один раз. Навсегда. <s>Сова</s> Никто не расстроится, если вы пропустите день.</p>
+    <a class="btn blue" href="https://app.lava.top/801303618?tabId=products&amp;sort=published" target="_blank" rel="noopener">Забрать за 30 € <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+  </div>
+</section>
+
+<!-- ================= INSIDE ================= -->
+<section class="panel" id="inside" aria-labelledby="in-h">
+  <div class="sec-head">
+    <svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg>
+    <h2 id="in-h">Что внутри<span class="dot"></span></h2>
+    <p>Настоящие записи экрана. Никаких макетов. Как выглядит, так и работает.</p>
+  </div>
+  <div class="bigstats">
+    <div class="stat"><b><span class="io" data-count="340">340</span>+</b><span>гайдов от A0 до C1</span></div>
+    <div class="stat"><b><span class="io" data-count="7500">7500</span>+</b><span>слов с озвучкой и транскрипцией</span></div>
+    <div class="stat"><b><span class="io" data-count="5">5</span></b><span>экзаменов: Goethe, telc, DTZ, ÖSD, TestDaF</span></div>
+  </div>
+  <div class="showcase">
+    <div class="phone-v"><video src="media/v-app.mp4" poster="media/v-app.jpg" muted loop playsinline preload="metadata" aria-label="Запись экрана: словарь с артиклями и озвучкой на телефоне"></video></div>
+    <div>
+      <div class="frame"><video src="media/v-gemini.mp4" poster="media/v-gemini.jpg" muted loop playsinline preload="metadata" aria-label="Запись экрана: интерактивный гайд в Gemini"></video></div>
+      <div class="cap-row">
+        <p><b>Интерактивные гайды.</b> Словарь с озвучкой, фразы, диалоги, тест с разбором и чат с ИИ-собеседником. Пишете по-немецки — он отвечает в образе.</p>
+        <p><b>С телефона.</b> Артикли цветом, карточки с иконками, озвучка по нажатию. Пять минут в очереди — уже занятие.</p>
+      </div>
+    </div>
+  </div>
+  <div class="feat-grid">
+    <article class="fcard"><div class="media"><video src="media/v-lexika.mp4" poster="media/v-lexika.jpg" muted loop playsinline preload="none" aria-label="Запись экрана: лексика по темам"></video></div><div class="tagrow"><span class="pill">Лексика</span></div><h3>Темы из жизни</h3><p>Транспорт, деньги, профессия, «Узнать дорогу». С фото, фразами и упражнениями.</p></article>
+    <article class="fcard"><div class="media"><img src="media/p3-guide.webp" alt="Список грамматических гайдов" width="1200" height="784" loading="lazy"></div><div class="tagrow"><span class="pill">Грамматика</span></div><h3>Гайды по полочкам</h3><p>Объяснение как на канале, видео, упражнения и наш разбор ответов.</p></article>
+    <article class="fcard"><div class="media"><img src="media/p4-words.webp" alt="Карточки слов с кнопками озвучки" width="1200" height="565" loading="lazy"></div><div class="tagrow"><span class="pill">Слова</span></div><h3>Слова на слух</h3><p>Каждое слово можно послушать. Не просто список — реально на слух.</p></article>
+    <article class="fcard"><div class="media"><img src="media/p5-builder.webp" alt="Упражнение «Собери фразу»" width="1200" height="565" loading="lazy"></div><div class="tagrow"><span class="pill">Практика</span></div><h3>Собери фразу</h3><p>Как упражнение выше, только их больше. Ошибку подсветит, правильный вариант озвучит.</p></article>
+    <article class="fcard"><div class="media"><img src="media/p6-tracker.webp" alt="Трекер прогресса в Notion" width="1200" height="784" loading="lazy"></div><div class="tagrow"><span class="pill">Трекер</span></div><h3>Прогресс видно</h3><p>Ставите цель, отмечаете занятия, видите результат. Чтение, слушание, письмо — отдельно.</p></article>
+    <article class="fcard"><div class="media"><img src="media/p-exams.webp" alt="Раздел экзаменов: A1, A2, B1, B2, C1, Goethe" width="1400" height="876" loading="lazy"></div><div class="tagrow"><span class="pill">Экзамены</span></div><h3>К экзамену без паники</h3><p>Отдельные блоки по сертификатам. Всё в одном месте.</p></article>
+  </div>
+</section>
+
+<!-- ================= REVIEWS ================= -->
+<section class="band" id="reviews" aria-labelledby="rev-h">
+  <div class="sec-head">
+    <svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg>
+    <h2 id="rev-h">Отзывы<span class="dot"></span></h2>
+    <p>Скриншоты из переписки. Без фотошопа. Мы бы и не смогли.</p>
+  </div>
+  <div class="rev-top">
+    <p>Листайте вбок →</p>
+    <div class="arrows"><button id="rvprev" aria-label="Предыдущий отзыв"><svg><use href="#i-left"/></svg></button><button id="rvnext" aria-label="Следующий отзыв"><svg><use href="#i-right"/></svg></button></div>
+  </div>
+  <div class="rev-track" id="rtrack">
+    <figure class="rev" style="margin:0"><img src="media/r6.webp" alt="Отзыв: удобно, что описаны и грамматика, и упражнения с видео, лексика объединена по темам" loading="lazy"><span>«Даже при наличии 5 минут остается полезным помощником»</span></figure>
+    <figure class="rev" style="margin:0"><img src="media/r5.webp" alt="Отзыв ученицы о скорости, результате и удовольствии от занятий" loading="lazy"><span>«И скорость, и результат, и удовольствие»</span></figure>
+    <figure class="rev" style="margin:0"><img src="media/r2.webp" alt="Отзыв: перебрала много ресурсов, проблема разговорной речи оставалась" loading="lazy"><span>«Перебрала много ресурсов, помимо интеграционных курсов»</span></figure>
+    <figure class="rev" style="margin:0"><img src="media/r1.webp" alt="Отзыв: уроки хорошо структурированы, материал подается последовательно" loading="lazy"><span>«Легко учиться и не теряться»</span></figure>
+    <figure class="rev" style="margin:0"><img src="media/r3.webp" alt="Отзыв: купила доступ год назад, платформа очень помогла" loading="lazy"><span>«Купила доступ год назад»</span></figure>
+    <figure class="rev" style="margin:0"><img src="media/r4.webp" alt="Отзыв: понравился раздел с видео и новыми словами на каждый день" loading="lazy"><span>«Очень удачное решение»</span></figure>
+  </div>
+</section>
+
+<!-- ================= PRICE ================= -->
+<section class="panel" id="price" aria-labelledby="pr-h">
+  <div class="sec-head">
+    <svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg>
+    <h2 id="pr-h">Цена<span class="dot"></span></h2>
+    <p>Один раз. Навсегда. Все обновления — бесплатно для тех, кто уже купил.</p>
+  </div>
+  <div class="price-grid">
+    <article class="plan">
+      <span class="pill lime" style="align-self:flex-start">С нуля</span>
+      <h3>A0–A2</h3><span class="lvl">Для тех, кто начинает или застрял на A2</span>
+      <div class="cost">20 €</div>
+      <ul>
+        <li><svg><use href="#i-check"/></svg>Грамматика A0–A2 с видео и разбором упражнений</li>
+        <li><svg><use href="#i-check"/></svg>Лексика для жизни: улица, транспорт, магазин, врач</li>
+        <li><svg><use href="#i-check"/></svg>Слова с озвучкой и транскрипцией</li>
+        <li><svg><use href="#i-check"/></svg>Оффлайн в Notion</li>
+      </ul>
+      <a class="btn blue" href="https://app.lava.top/801303618?tabId=products&amp;sort=published" target="_blank" rel="noopener">Выбрать A0–A2</a>
+    </article>
+    <article class="plan feat">
+      <span class="pill lime" style="align-self:flex-start">Выгоднее всего</span>
+      <h3>A0–C1 целиком</h3><span class="lvl">Обе платформы. Вместо 40 €</span>
+      <div class="cost">30 €<s>40 €</s></div>
+      <ul>
+        <li><svg><use href="#i-check"/></svg>340+ гайдов от A0 до C1</li>
+        <li><svg><use href="#i-check"/></svg>7500+ слов с озвучкой, флеш-карты, трекер</li>
+        <li><svg><use href="#i-check"/></svg>Экзамены: Goethe, telc, DTZ, ÖSD, TestDaF</li>
+        <li><svg><use href="#i-check"/></svg>Фильмы, книги, подкасты по уровням</li>
+        <li><svg><use href="#i-check"/></svg>В подарок: A0–A2 на украинском</li>
+      </ul>
+      <a class="btn lime" href="https://app.lava.top/801303618?tabId=products&amp;sort=published" target="_blank" rel="noopener">Забрать A0–C1 за 30 € <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </article>
+    <article class="plan">
+      <span class="pill lime" style="align-self:flex-start">Уже в теме</span>
+      <h3>B1–C1</h3><span class="lvl">Для тех, кто идет к B2, C1 и экзаменам</span>
+      <div class="cost">20 €</div>
+      <ul>
+        <li><svg><use href="#i-check"/></svg>Грамматика B1–C1 с разбором</li>
+        <li><svg><use href="#i-check"/></svg>Интерактивная лексика под темы TestDaF, Goethe C1, telc</li>
+        <li><svg><use href="#i-check"/></svg>Аутентичные тексты, диалоги, чат с ИИ</li>
+        <li><svg><use href="#i-check"/></svg>Оффлайн в Notion</li>
+      </ul>
+      <a class="btn blue" href="https://app.lava.top/801303618?tabId=products&amp;sort=published" target="_blank" rel="noopener">Выбрать B1–C1</a>
+    </article>
+  </div>
+  <p class="price-note">Цену планируем поднять после следующих обновлений. Кто купил раньше — получает всё новое бесплатно.</p>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="panel white cta" id="go" aria-labelledby="go-h">
+  <div class="bubbles" aria-hidden="true">
+    <span class="bub" style="--x:6%;--y:9%;--S:150px;--s:84px;--d:0s"><img src="media/c-street.webp" alt="" loading="lazy"></span>
+    <span class="bub" style="--x:24%;--y:40%;--S:104px;--s:64px;--d:1.2s"><img src="media/c-bus.webp" alt="" loading="lazy"></span>
+    <span class="bub" style="--x:9%;--y:66%;--S:128px;--s:76px;--d:.6s"><img src="media/c-tor.webp" alt="" loading="lazy"></span>
+    <span class="bub" style="--x:36%;--y:76%;--S:84px;--s:58px;--d:2s"><img src="media/c-ticket.webp" alt="" loading="lazy"></span>
+  </div>
+  <h2 id="go-h">Готовы спросить дорогу<span class="q">?</span></h2>
+  <p>И понять ответ целиком, а не одно слово links. Этот урок — начало. Остальные 340+ — на платформе.</p>
+  <a class="btn blue" href="https://app.lava.top/801303618?tabId=products&amp;sort=published" target="_blank" rel="noopener">Забрать платформу <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+  <div class="bubbles bottom" aria-hidden="true">
+    <span class="bub" style="--x:78%;--y:8%;--S:120px;--s:72px;--d:.9s"><img src="media/c-city.webp" alt="" loading="lazy"></span>
+    <span class="bub" style="--x:64%;--y:36%;--S:92px;--s:60px;--d:1.6s"><img src="media/c-cafe.webp" alt="" loading="lazy"></span>
+    <span class="bub" style="--x:84%;--y:48%;--S:96px;--s:64px;--d:.3s"><img src="media/c-phone.webp" alt="" loading="lazy"></span>
+    <span class="bub" style="--x:68%;--y:72%;--S:136px;--s:80px;--d:2.4s"><img src="media/c-bakery.webp" alt="" loading="lazy"></span>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="band" id="foot" style="padding-bottom:16px">
+  <div class="foot-box">
+    <div class="foot-top">
+      <nav aria-label="Разделы"><a href="#ask">Спросить</a><a href="#zum">zum / zur</a><a href="#route">Маршрут</a><a href="#quiz">Тест</a><a href="#faq">FAQ</a><a href="#price">Цена</a></nav>
+      <div class="soc">
+        <a href="https://t.me/stellas_d" target="_blank" rel="noopener" aria-label="Telegram-канал Stellas"><svg><use href="#i-tg"/></svg></a>
+        <a href="https://wa.me/message/D4YYEMPLIMNLA1" target="_blank" rel="noopener" aria-label="WhatsApp"><svg><use href="#i-wa"/></svg></a>
+      </div>
+    </div>
+    <p class="wordmark" aria-label="Stellas">Stellas<span class="dot"></span></p>
+    <p class="copy">© 2026 Stellas · Немецкий от A0 до C1 · Links — это налево</p>
+  </div>
+</footer>
+
+<section class="band thanks" id="danke" aria-label="Спасибо">
+  <h2><span class="l">Danke</span> fürs Lesen</h2>
+  <div class="post-wrap">
+    <svg class="post" viewBox="0 0 320 430" aria-hidden="true">
+      <ellipse cx="160" cy="420" rx="74" ry="9" fill="rgba(0,0,0,.2)"/>
+      <rect x="152" y="40" width="16" height="382" rx="8" fill="#0A0A0A"/>
+      <g class="sign" style="transform-origin:160px 90px;animation:sway 7s ease-in-out infinite"><path d="M166 62H286L312 90L286 118H166Z" fill="#B4EC5C" stroke="#0A0A0A" stroke-width="3"/><text x="182" y="98" font-size="23" font-weight="600" fill="#0A0A0A" font-family="Urbanist, system-ui, sans-serif">Stellas</text></g>
+      <g class="sign" style="transform-origin:160px 158px;animation:sway 7s ease-in-out .6s infinite"><path d="M154 130H34L8 158L34 186H154Z" fill="#fff" stroke="#0A0A0A" stroke-width="3"/><text x="140" y="166" text-anchor="end" font-size="23" font-weight="600" fill="#0A0A0A" font-family="Urbanist, system-ui, sans-serif">Bahnhof</text></g>
+      <g class="sign" style="transform-origin:160px 226px;animation:sway 7s ease-in-out 1.2s infinite"><path d="M166 198H292L318 226L292 254H166Z" fill="#0A0A0A"/><text x="182" y="234" font-size="23" font-weight="600" fill="#B4EC5C" font-family="Urbanist, system-ui, sans-serif">A0 → C1</text></g>
+      <circle cx="160" cy="38" r="15" fill="#B4EC5C" stroke="#0A0A0A" stroke-width="4"/>
+    </svg>
+  </div>
+  <div class="thanks-side">
+    <p>Спросить дорогу вы теперь можете. <b>Выучить остальное</b> — на платформе. Вопросы — пишите в личку.</p>
+    <div class="contacts">
+      <a href="https://t.me/stellasdeutsch" target="_blank" rel="noopener"><span class="c"><svg><use href="#i-tg"/></svg></span>@stellasdeutsch</a>
+      <a href="https://wa.me/message/D4YYEMPLIMNLA1" target="_blank" rel="noopener"><span class="c"><svg><use href="#i-wa"/></svg></span>WhatsApp</a>
+    </div>
+    <a class="btn lime" style="justify-self:start" href="https://app.lava.top/801303618?tabId=products&amp;sort=published" target="_blank" rel="noopener">Платформа A0–C1 · 30 € <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+  </div>
+</section>
+
+</div>
+
+<a class="float-cta" id="fcta" href="https://app.lava.top/801303618?tabId=products&amp;sort=published" target="_blank" rel="noopener">Платформа A0–C1 · 30 €<span class="go"><svg><use href="#i-arrow"/></svg></span></a>
+
+<script>
+(()=>{
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const timers=new Set();
+const later=(fn,ms)=>{const t=setTimeout(()=>{timers.delete(t);fn()},ms);timers.add(t);return t};
+
+/* ---------- speech ---------- */
+const synth=('speechSynthesis' in window)?window.speechSynthesis:null;
+let deVoice=null;
+function pickVoice(){if(!synth)return;const vs=synth.getVoices();deVoice=vs.find(v=>/^de[-_]DE/i.test(v.lang)&&/google|anna|helena|katja|petra|markus|yannick/i.test(v.name))||vs.find(v=>/^de/i.test(v.lang))||null}
+if(synth){pickVoice();synth.addEventListener?.('voiceschanged',pickVoice)}else{document.documentElement.classList.add('no-tts')}
+function say(text,btn){
+  if(!synth||!text)return;
+  try{synth.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';if(deVoice)u.voice=deVoice;u.rate=.88;
+    if(btn){btn.classList.add('talking');const off=()=>btn.classList.remove('talking');u.onend=off;u.onerror=off;setTimeout(off,8000)}
+    synth.speak(u)}catch(e){}
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b)say(b.dataset.say,b.classList.contains('say')?b:null)});
+
+/* ---------- in-view ---------- */
+function countUp(el){const to=+el.dataset.count;if(RM||!to){el.textContent=to;return}const t0=performance.now(),d=1200;
+  const step=t=>{const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);el.textContent=Math.round(to*e);if(p<1)requestAnimationFrame(step)};el.textContent='0';requestAnimationFrame(step)}
+if('IntersectionObserver' in window){
+  const io=new IntersectionObserver(es=>es.forEach(en=>{if(!en.isIntersecting)return;const t=en.target;t.classList.add('in');if(t.dataset.count!==undefined)countUp(t);io.unobserve(t)}),{threshold:.3});
+  $$('.io').forEach(el=>io.observe(el));
+  const vio=new IntersectionObserver(es=>es.forEach(en=>{const v=en.target;if(en.isIntersecting){v.play?.().catch(()=>{})}else v.pause?.()}),{threshold:.25});
+  $$('video').forEach(v=>vio.observe(v));
+}else{$$('.io').forEach(el=>el.classList.add('in'))}
+
+/* ---------- zum / zur stepper ---------- */
+const Z={
+  m:{noun:'Bahnhof',nom:'der',dat:['de','m'],merge:true,out:'zum',caps:['der Bahnhof. Мужской род. Стоит спокойно, в Nominativ. Пока zu не пришел.','Пришел zu. zu требует Dativ. Всегда. der превращается в dem.','zu + dem = zum. Две буквы исчезли. Никто не заметил.']},
+  f:{noun:'Post',nom:'die',dat:['de','r'],merge:true,out:'zur',caps:['die Post. Женский род.','Dativ у женского рода — der. Да, der. Женский. Не спрашивайте, я тоже спрашивал.','zu + der = zur. Одна буква r. Вся разница.']},
+  n:{noun:'Rathaus',nom:'das',dat:['de','m'],merge:true,out:'zum',caps:['das Rathaus. Средний род.','В Dativ das тоже становится dem. Как мужской. Средний род вообще часто притворяется мужским.','zu + dem = zum. Опять zum.']},
+  p:{noun:'Toiletten',nom:'die',dat:['de','n'],merge:false,out:'zu den',caps:['die Toiletten. Множественное число. Самый важный вопрос в любом городе.','Dativ во множественном — den.','zu den Toiletten. Не склеивается. Никогда. Слова «zun» не существует.']}
+};
+let zk='m',zp=2;
+const zst=$('#zstage'),zart=$('.art',zst),zcap=$('#zcap'),zph=$$('.ph'),zsay=$('#zsay');
+function zRender(anim){
+  const d=Z[zk];
+  $('.noun',zst).textContent=d.noun;
+  if(zp===0){zart.className='art';zart.innerHTML='<span class="a-full">'+d.nom+'</span>'}
+  else if(anim&&zp===1||!zart.querySelector('.a-drop')){zart.className='art dat';zart.innerHTML='<span class="a-drop">'+d.dat[0]+'</span><span class="a-keep">'+d.dat[1]+'</span>'}
+  else{zart.className='art dat'}
+  if(anim&&zp<2){void zart.offsetWidth;zart.classList.add('flip')}
+  zst.classList.toggle('merged',zp===2&&d.merge);
+  zst.classList.toggle('nomerge',zp===2&&!d.merge);
+  zcap.textContent=d.caps[zp];
+  zph.forEach((p,i)=>p.classList.toggle('on',i<=zp));
+  const phrase='Wie komme ich '+(zp===2?d.out:(zp===1?'zu '+d.dat.join(''):'zu '+d.nom))+' '+d.noun+'?';
+  zsay.dataset.say=zp===2?phrase:'Wie komme ich '+d.out+' '+d.noun+'?';
+}
+function zClear(){timers.forEach(clearTimeout);timers.clear()}
+function zPlay(){zClear();zp=0;zRender(true);later(()=>{zp=1;zRender(true)},RM?0:1300);later(()=>{zp=2;zRender(true)},RM?0:2800)}
+$$('.tab').forEach(t=>t.addEventListener('click',()=>{$$('.tab').forEach(x=>x.setAttribute('aria-selected',x===t));zk=t.dataset.z;zPlay()}));
+$('#zplay').addEventListener('click',zPlay);
+$('#zprev').addEventListener('click',()=>{zClear();if(zp>0){zp--;zst.classList.remove('merged','nomerge');zRender(true)}});
+$('#znext').addEventListener('click',()=>{zClear();if(zp<2){zp++;zRender(true)}});
+
+/* ---------- zum / zur game ---------- */
+const G=[['die Apotheke','Apotheke','zur'],['der Supermarkt','Supermarkt','zum'],['das Krankenhaus','Krankenhaus','zum'],['die Bushaltestelle','Bushaltestelle','zur'],['der Marktplatz','Marktplatz','zum'],['das Kino','Kino','zum'],['die U-Bahn-Station','U-Bahn-Station','zur'],['die Bank','Bank','zur']];
+let gi=0,gs=0;
+const gq=$('#gq'),gh=$('#ghint'),gfb=$('#gfb'),gn=$('#gnext'),gsc=$('#gscore');
+function gRender(){
+  gfb.textContent='';
+  if(gi>=G.length){gq.innerHTML=gs+' из '+G.length;gh.textContent=gs===G.length?'Идеально. Вы склеиваете быстрее немцев.':'Неплохо. Еще раз — и будет '+G.length+' из '+G.length+'.';$$('.opt').forEach(o=>o.hidden=true);gfb.textContent='';gn.hidden=false;gn.firstChild.textContent='Еще раз ';return}
+  const [full,noun]=G[gi];gq.innerHTML='Wie komme ich <span class="blank">___</span> '+noun+'?';gh.textContent='Подсказка: '+full;
+  $$('.opt').forEach(o=>{o.hidden=false;o.disabled=false;o.className='opt'});gn.hidden=true;gsc.textContent=gs+' / '+G.length;
+}
+$$('.opt').forEach(o=>o.addEventListener('click',()=>{
+  const [full,noun,ans]=G[gi],ok=o.dataset.a===ans;
+  $$('.opt').forEach(x=>{x.disabled=true;if(x.dataset.a===ans)x.classList.add('ok')});if(!ok)o.classList.add('bad');
+  if(ok)gs++;gsc.textContent=gs+' / '+G.length;
+  $('.blank',gq).textContent=ans;
+  const art=full.split(' ')[0],dat=art==='die'?'der':'dem';
+  gfb.textContent=(ok?'Да. ':'Нет. ')+full+' → Dativ: '+dat+' → zu + '+dat+' = '+ans+'.';
+  say('Wie komme ich '+ans+' '+noun+'?');
+  gn.hidden=false;gn.firstChild.textContent=gi===G.length-1?'Итог ':'Дальше ';
+}));
+gn.addEventListener('click',()=>{if(gi>=G.length){gi=0;gs=0}else gi++;gRender()});
+gRender();gfb.textContent='Я сначала думал, zum и zur — это два разных слова. Как Zoom и Uber. Нет. Это zu, который съел артикль.';
+
+/* ---------- abbiegen FLIP stepper ---------- */
+const F=[
+  {seq:[['ab','ab',1],['verb','biegen',0]],glue:1,cap:'abbiegen. Сворачивать. Одно слово. Пока.'},
+  {seq:[['ab','ab',1],['verb','biegen',1]],cap:'ab — отделяемая приставка. Она отваливается при первой же возможности.'},
+  {seq:[['verb','Biegen',1],['sie','Sie',0],['ab','ab.',1]],cap:'Глагол идет вперед, Sie сразу за ним. ab улетает в самый конец. Как я из универа — со второго курса.'},
+  {seq:[['verb','Biegen',1],['sie','Sie',0],['where','an der Ampel',0],['dir','links',0],['ab','ab.',1]],cap:'Между глаголом и ab — всё остальное: где и куда. Готово. Вы только что объяснили дорогу.'},
+  {seq:[['verb','Bieg',1],['where','an der Ampel',0],['dir','links',0],['ab','ab.',1]],cap:'Своим — без Sie и без -en: Bieg. ab всё равно в конце. От ab не убежишь.'}
+];
+let fi=3;
+const fst=$('#fstage'),fcap=$('#fcap'),fcount=$('#fcount'),fsay=$('#fsay');
+const tk=Object.fromEntries($$('.tk',fst).map(t=>[t.dataset.k,t]));
+function fRender(anim){
+  const s=F[fi],first={};
+  if(anim&&!RM)Object.values(tk).forEach(t=>{if(!t.classList.contains('gone'))first[t.dataset.k]=t.getBoundingClientRect()});
+  const on=new Set(s.seq.map(x=>x[0]));
+  s.seq.forEach(([k,txt,hl],i)=>{const t=tk[k];t.textContent=txt;t.style.order=i;t.classList.remove('gone');
+    t.classList.toggle('v',k==='verb'&&!!hl);t.classList.toggle('pre',k==='ab'&&!!hl&&!s.glue)});
+  Object.keys(tk).forEach(k=>{if(!on.has(k))tk[k].classList.add('gone')});
+  fst.classList.toggle('glue',!!s.glue);
+  if(anim&&!RM){Object.values(tk).forEach(t=>{const k=t.dataset.k;if(!on.has(k))return;const a=first[k];
+      if(!a){t.classList.remove('enter');void t.offsetWidth;t.classList.add('enter');return}
+      const b=t.getBoundingClientRect(),dx=a.left-b.left,dy=a.top-b.top;if(!dx&&!dy)return;
+      t.style.transition='none';t.style.transform='translate('+dx+'px,'+dy+'px)';void t.offsetWidth;
+      t.style.transition='transform .65s cubic-bezier(.3,1.25,.45,1),background .35s,color .35s,padding .35s';t.style.transform='';})}
+  fcap.textContent=s.cap;fcount.textContent='ШАГ '+(fi+1)+' / '+F.length;
+  fsay.dataset.say=s.seq.map(x=>x[1]).join(' ').replace(/^ab biegen$/,'abbiegen');
+}
+$('#fprev').addEventListener('click',()=>{if(fi>0){fi--;fRender(true)}});
+$('#fnext').addEventListener('click',()=>{if(fi<F.length-1){fi++;fRender(true)}});
+let fT=[];
+$('#fplay').addEventListener('click',()=>{fT.forEach(clearTimeout);fT=[];fi=0;fRender(true);for(let i=1;i<F.length;i++)fT.push(setTimeout(()=>{fi=i;fRender(true)},RM?0:i*1900))});
+
+/* Sie / du */
+$$('.seg button').forEach(b=>b.addEventListener('click',()=>{
+  $$('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  const form=b.dataset.form;
+  $$('#plist li').forEach((li,i)=>{li.classList.add('swap');setTimeout(()=>{const [html,plain]=li.dataset[form].split('|');$('.de',li).innerHTML=html;$('.say',li).dataset.say=plain;li.classList.remove('swap')},RM?0:180+i*50)});
+}));
+
+/* ---------- route ---------- */
+const P=[[180,440],[180,330],[150,330],[60,330],[60,240],[155,145],[170,130],[250,130],[250,75],[250,40]];
+const END=[0,1,2,4,6,8,9];
+const cum=[0];for(let i=1;i<P.length;i++)cum.push(cum[i-1]+Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]));
+const total=cum[cum.length-1];
+const R=[
+  {de:'Entschuldigung, wie komme ich <mark>zum</mark> Bahnhof?',say:'Entschuldigung, wie komme ich zum Bahnhof?',ru:'Извините, как пройти к вокзалу?',note:'Это вы. Вы молодец. Вы спросили целым предложением. Дальше — ответ прохожего.',hl:[],short:'Вопрос'},
+  {de:'Gehen Sie hier <mark>geradeaus</mark> bis zur Ampel.',say:'Gehen Sie hier geradeaus bis zur Ampel.',ru:'Идите прямо до светофора.',note:'bis zur — до. zu + der Ampel = zur. Вы это уже умеете.',hl:['lm-ampel'],short:'Прямо до светофора'},
+  {de:'An der Ampel biegen Sie <mark>links</mark> ab.',say:'An der Ampel biegen Sie links ab.',ru:'На светофоре сверните налево.',note:'Links. Налево. Не направо. Я проверял. Дважды.',hl:['lm-ampel'],short:'На светофоре налево'},
+  {de:'Dann nehmen Sie die <mark>zweite</mark> Straße rechts.',say:'Dann nehmen Sie die zweite Straße rechts.',ru:'Потом вторая улица направо.',note:'Первую пропускаете. Считайте. Можно вслух — немцы привыкли.',hl:[],nums:1,short:'Вторая улица направо'},
+  {de:'Gehen Sie <mark>durch den Park</mark>.',say:'Gehen Sie durch den Park.',ru:'Идите через парк.',note:'durch + Akkusativ. Сквозь парк, а не вокруг. Такса одобряет.',hl:['lm-park'],short:'Через парк'},
+  {de:'Dann gehen Sie <mark>über die Brücke</mark>.',say:'Dann gehen Sie über die Brücke.',ru:'Потом через мост.',note:'über — поверх. Над рекой, а не в ней.',hl:['lm-bridge'],short:'Через мост'},
+  {de:'Der Bahnhof ist auf der <mark>linken</mark> Seite, gegenüber vom Supermarkt.',say:'Der Bahnhof ist auf der linken Seite, gegenüber vom Supermarkt.',ru:'Вокзал будет слева, напротив супермаркета.',note:'Всё. Вы дошли. Поезд, в отличие от меня, вы успеете.',hl:['lm-bahnhof','lm-markt'],short:'Вокзал слева'}
+];
+const map=$('#map'),rp=$('#rpath'),walker=$('#walker'),warrow=$('#warrow');
+const d='M'+P.map(p=>p.join(' ')).join(' L');
+rp.setAttribute('d',d);$('#ghost').setAttribute('d',d);
+rp.style.strokeDasharray=total;rp.style.strokeDashoffset=total;
+let curL=0,rs=0,raf=0;
+function at(L){let i=1;while(i<cum.length-1&&cum[i]<L)i++;const a=P[i-1],b=P[i],seg=cum[i]-cum[i-1]||1,t=Math.max(0,Math.min(1,(L-cum[i-1])/seg));return{x:a[0]+(b[0]-a[0])*t,y:a[1]+(b[1]-a[1])*t,ang:Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI+90}}
+function setL(L){curL=L;rp.style.strokeDashoffset=total-L;const p=at(Math.max(L,.01));walker.setAttribute('transform','translate('+p.x.toFixed(1)+' '+p.y.toFixed(1)+')');warrow.setAttribute('transform','rotate('+p.ang.toFixed(1)+')')}
+function goL(to,cb){cancelAnimationFrame(raf);const from=curL,dist=Math.abs(to-from);if(RM||!dist){setL(to);cb&&cb();return}
+  const dur=Math.max(450,dist*7),t0=performance.now();
+  const f=t=>{const p=Math.min(1,(t-t0)/dur),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;setL(from+(to-from)*e);if(p<1)raf=requestAnimationFrame(f);else cb&&cb()};raf=requestAnimationFrame(f)}
+const slist=$('#slist');
+R.forEach((s,i)=>{const li=document.createElement('li');li.innerHTML='<button><span class="n">'+i+'</span>'+(i===0?'Вы спрашиваете':s.short)+'</button>';li.firstChild.addEventListener('click',()=>{stopAuto();rGo(i)});slist.appendChild(li)});
+function rUI(){
+  const s=R[rs];
+  $('#rcount').textContent=(rs===0?'СТАРТ · ':rs===R.length-1?'ФИНИШ · ':'')+'ШАГ '+rs+' / '+(R.length-1);
+  $('#rde').innerHTML=s.de;$('#rru').textContent=s.ru;$('#rnote').textContent=s.note;$('#rsay').dataset.say=s.say;
+  const now=$('#now');now.classList.remove('swap');void now.offsetWidth;now.classList.add('swap');
+  ['lm-ampel','lm-park','lm-bridge','lm-bahnhof','lm-markt'].forEach(id=>document.getElementById(id).classList.toggle('hl',s.hl.includes(id)));
+  map.classList.toggle('nums',rs===3);
+  $$('#slist button').forEach((b,i)=>{b.classList.toggle('cur',i===rs);b.classList.toggle('done',i<rs)});
+  $('#rnext').firstChild.textContent=rs===R.length-1?'Сначала ':'Дальше ';
+}
+function rGo(n){rs=n;rUI();goL(cum[END[n]])}
+let auto=[];function stopAuto(){auto.forEach(clearTimeout);auto=[]}
+$('#rnext').addEventListener('click',()=>{stopAuto();rGo(rs===R.length-1?0:rs+1)});
+$('#rprev').addEventListener('click',()=>{stopAuto();if(rs>0)rGo(rs-1)});
+$('#rplay').addEventListener('click',()=>{stopAuto();setL(0);rs=0;rUI();
+  const run=i=>{if(i>=R.length)return;rs=i;rUI();goL(cum[END[i]],()=>{auto.push(setTimeout(()=>run(i+1),RM?0:1500))})};
+  auto.push(setTimeout(()=>run(1),RM?0:900))});
+setL(0);rUI();
+
+/* ---------- chat replay ---------- */
+const msgs=$$('#chat .msg');let cT=[];
+$('#creplay').addEventListener('click',()=>{
+  cT.forEach(clearTimeout);cT=[];$$('#chat .typing').forEach(t=>t.remove());
+  msgs.forEach(m=>{m.hidden=true;m.classList.remove('show')});
+  let t=RM?0:300;
+  msgs.forEach(m=>{
+    if(m.classList.contains('them')&&!RM){cT.push(setTimeout(()=>{const ty=document.createElement('div');ty.className='typing';ty.innerHTML='<i></i><i></i><i></i>';m.before(ty)},t));t+=900}
+    cT.push(setTimeout(()=>{m.previousElementSibling?.classList.contains('typing')&&m.previousElementSibling.remove();m.hidden=false;m.classList.add('show')},t));
+    t+=RM?0:(m.classList.contains('me')?900:700);
+  });
+});
+
+/* ---------- quiz ---------- */
+const Q=[
+  {q:'Wie komme ich ___ Post?',o:['zum','zur','zu die'],a:1,e:'die Post → Dativ: der Post → zu + der = zur. «zu die» не бывает: после zu всегда Dativ.'},
+  {q:'«Biegen Sie links ab». Куда поворачиваем?',o:['Налево','Направо','Прямо'],a:0,e:'links — налево. Если вы ответили «направо», мы с вами из одной истории. Добро пожаловать.'},
+  {q:'Какой порядок слов правильный?',o:['Abbiegen Sie links.','Biegen Sie links ab.','Sie biegen ab links.'],a:1,e:'Императив: глагол на первом месте, Sie сразу за ним, приставка ab — в самом конце.'},
+  {q:'Gehen Sie ___ den Park.',o:['an','durch','bei'],a:1,e:'durch — сквозь. Всегда с Akkusativ: durch den Park. Вы идете через парк, а не стоите у него.'},
+  {q:'Gibt es hier in der Nähe ___ Apotheke?',o:['die','eine','einen'],a:1,e:'Вы не знаете, есть ли она вообще. Значит, неопределенный артикль: eine Apotheke. einen — для мужского рода.'},
+  {q:'Вам объяснили слишком быстро. Что сказать?',o:['Ja, ja, danke.','Etwas langsamer, bitte.','Links?'],a:1,e:'Etwas langsamer, bitte — чуть помедленнее. «Ja, ja, danke» — это путь к вокзалу через сорок минут.'}
+];
+let qi=0,qs=0;const qbox=$('#qbox');
+function qRender(){
+  if(qi>=Q.length){qbox.innerHTML='<div class="bar"><i style="width:100%"></i></div><div class="qend"><span class="qmeta">ИТОГ</span><div class="big">'+qs+' / '+Q.length+'</div><p class="qtext" style="font-size:22px">'+(qs===Q.length?'Чисто. Можно ехать на вокзал.':qs>=4?'Хорошо. Один раз переспросите — и дойдете.':'Ничего. Я в свое время набрал бы ноль.')+'</p><p class="card-note">На платформе такие упражнения есть к каждому гайду — с разбором, почему ответ правильный или нет.</p><div class="ctrl" style="margin-top:14px"><button class="btn blue sm" id="qagain">Пройти еще раз</button><a class="btn ghost sm" href="#stellas">Что за платформа?</a></div></div>';
+    $('#qagain').addEventListener('click',()=>{qi=0;qs=0;qRender()});return}
+  const x=Q[qi];
+  qbox.innerHTML='<div class="bar"><i style="width:'+(qi/Q.length*100)+'%"></i></div><span class="qmeta">ВОПРОС '+(qi+1)+' / '+Q.length+'</span><p class="qtext">'+x.q+'</p><div class="qopts">'+x.o.map((o,i)=>'<button class="qopt" data-i="'+i+'">'+o+'</button>').join('')+'</div><div id="qexp"></div>';
+  $$('.qopt',qbox).forEach(b=>b.addEventListener('click',()=>{
+    const i=+b.dataset.i,ok=i===x.a;if(ok)qs++;
+    $$('.qopt',qbox).forEach((o,j)=>{o.disabled=true;if(j===x.a)o.classList.add('ok')});if(!ok)b.classList.add('bad');
+    $('.bar i',qbox).style.width=((qi+1)/Q.length*100)+'%';
+    $('#qexp').innerHTML='<div class="exp"><b>'+(ok?'Верно.':'Не совсем.')+'</b>'+x.e+'</div><button class="btn blue sm" id="qnext" style="margin-top:14px">'+(qi===Q.length-1?'Итог':'Дальше')+'</button>';
+    $('#qnext').addEventListener('click',()=>{qi++;qRender()});
+  }));
+}
+qRender();
+
+/* ---------- sentence builder ---------- */
+const TARGET='Biegen Sie an der Ampel links ab.';
+const WORDS=['links','ab.','Sie','an der Ampel','Biegen'];
+const slot=$('#slot'),pool=$('#pool'),bmsg=$('#bmsg');
+function bReset(){slot.innerHTML='';pool.innerHTML='';slot.classList.remove('win','nope');bmsg.textContent='';
+  WORDS.forEach(w=>{const c=document.createElement('button');c.className='chip';c.textContent=w;c.addEventListener('click',()=>{slot.classList.remove('win','nope');bmsg.textContent='';(c.parentNode===pool?slot:pool).appendChild(c)});pool.appendChild(c)})}
+$('#bcheck').addEventListener('click',()=>{
+  const s=$$('.chip',slot).map(c=>c.textContent).join(' ');
+  if(pool.children.length){bmsg.textContent='Еще не все слова. Их пять.';return}
+  if(s===TARGET){slot.classList.add('win');bmsg.textContent='Да! Глагол впереди, ab в конце. Послушайте, как звучит.';say(TARGET)}
+  else{slot.classList.remove('nope');void slot.offsetWidth;slot.classList.add('nope');bmsg.textContent='Почти. Подсказка: глагол — первым, ab — последним.'}
+});
+$('#breset').addEventListener('click',bReset);bReset();
+
+/* ---------- reviews ---------- */
+const rt=$('#rtrack');const rstep=()=>($('.rev',rt)?.getBoundingClientRect().width||300)+14;
+$('#rvprev').addEventListener('click',()=>rt.scrollBy({left:-rstep(),behavior:RM?'auto':'smooth'}));
+$('#rvnext').addEventListener('click',()=>rt.scrollBy({left:rstep(),behavior:RM?'auto':'smooth'}));
+
+/* ---------- floating CTA ---------- */
+const fcta=$('#fcta'),hero=$('#top');let block=0;
+if('IntersectionObserver' in window){
+  const bo=new IntersectionObserver(es=>es.forEach(en=>{en.target._v=en.isIntersecting;block=['price','go','foot','danke'].some(id=>document.getElementById(id)._v);upd()}),{threshold:0});
+  ['price','go','foot','danke'].forEach(id=>bo.observe(document.getElementById(id)));
+}
+function upd(){fcta.classList.toggle('show',scrollY>hero.offsetHeight*.9&&!block)}
+addEventListener('scroll',upd,{passive:true});upd();
+})();
+</script>
