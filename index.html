@@ -142,7 +142,7 @@ em.hl,.hl-b{font-style:normal;color:var(--blue)}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:26px}
 .stat b{display:block;color:var(--blue);font-weight:400;font-size:clamp(38px,11vw,68px);letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
 .stat b small{font-size:.42em;letter-spacing:-.01em;margin-left:.08em}
-.stat span{display:block;margin-top:6px;font-size:13.5px;line-height:1.3;color:var(--muted)}
+.stat>span{display:block;margin-top:6px;font-size:13.5px;line-height:1.3;color:var(--muted)}
 .after{margin-top:24px;padding:18px 20px;border-radius:var(--r-md);background:var(--white);font-size:17px}
 @media (min-width:900px){.story{grid-template-columns:.8fr 1.2fr;gap:56px}.story-text p{font-size:19px}}
 
@@ -519,6 +519,81 @@ em.hl,.hl-b{font-style:normal;color:var(--blue)}
 .float-cta .go{width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--lime);display:grid;place-items:center}
 .float-cta .go svg{width:18px;height:18px}
 
+
+/* ===== MORE MOTION ===== */
+.rv{opacity:0;translate:0 26px;transition:opacity .7s ease,translate .85s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i,0)*75ms)}
+.rv.in{opacity:1;translate:0 0}
+.sec-head.in .dot{animation:dotpop .7s cubic-bezier(.3,1.8,.5,1) .35s both}
+.sec-head.in .mark{animation:markin .9s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes dotpop{from{transform:scale(0)}}
+@keyframes markin{from{rotate:-120deg;scale:.3}}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:70;background:var(--lime);transform-origin:0 50%;transform:scaleX(0);pointer-events:none}
+.confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:80}
+
+.marquee{overflow:hidden;margin:6px -16px 0;padding:6px 0 14px;display:grid;gap:12px;color:var(--white)}
+@media (min-width:900px){.marquee{margin-inline:-36px;gap:16px}}
+.mq{display:flex;width:max-content;animation:mq 40s linear infinite}
+.mq.rev{animation-direction:reverse;animation-duration:48s}
+.mq>span{flex:none;display:inline-flex;align-items:center;gap:16px;padding-right:16px;font-size:clamp(34px,8vw,72px);font-weight:500;letter-spacing:-.045em;white-space:nowrap;line-height:1.1}
+.mq>span i{font-style:normal;display:inline-grid;place-items:center;width:.95em;height:.95em;border-radius:50%;background:var(--lime);color:var(--ink);font-size:.5em;letter-spacing:0}
+.mq.rev>span{font-size:clamp(16px,3.8vw,24px);font-weight:600;letter-spacing:-.01em;gap:10px;padding-right:10px}
+.mq.rev>span b{padding:.45em 1em;border-radius:999px;border:1.5px solid rgba(255,255,255,.4);font-weight:600}
+.mq.rev>span b:nth-child(3n){background:var(--lime);color:var(--ink);border-color:var(--lime)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+.hero-trail{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.hero-trail path{fill:none;stroke:rgba(255,255,255,.4);stroke-width:2.5;stroke-dasharray:2 12;stroke-linecap:round;vector-effect:non-scaling-stroke;animation:ants 1.1s linear infinite}
+@keyframes ants{to{stroke-dashoffset:-14}}
+.hero-stat,.hero-pitch{position:relative;z-index:1}
+.post-wrap{translate:calc(var(--px,0)*20px) calc(var(--py,0)*10px);rotate:calc(var(--px,0)*3deg);transition:translate .5s ease-out,rotate .5s ease-out}
+.chipf{position:absolute;z-index:3;padding:7px 13px;border-radius:999px;font-weight:700;font-size:clamp(13px,3.3vw,17px);line-height:1.1;white-space:nowrap;box-shadow:0 12px 24px -12px rgba(0,0,0,.5);animation:chipin .6s cubic-bezier(.3,1.6,.5,1) both,float 5s ease-in-out infinite;translate:calc(var(--px,0)*-26px) calc(var(--py,0)*-16px);transition:translate .5s ease-out}
+.chipf.w{background:var(--white);color:var(--ink)}
+.chipf.l{background:var(--lime);color:var(--ink)}
+.chipf.k{background:var(--ink);color:var(--lime)}
+.chipf.b{background:var(--blue);color:var(--white);box-shadow:0 0 0 2px var(--white),0 12px 24px -12px rgba(0,0,0,.5)}
+@keyframes chipin{from{opacity:0;scale:.3}}
+
+.scrib{position:relative;white-space:nowrap}
+.scrib svg{position:absolute;left:-3%;bottom:-.2em;width:106%;height:.42em;overflow:visible;pointer-events:none}
+.scrib path{fill:none;stroke:var(--lime);stroke-width:6;stroke-linecap:round;stroke-dasharray:260;stroke-dashoffset:260;transition:stroke-dashoffset 1.2s cubic-bezier(.6,0,.2,1) .5s}
+.scrib.in path{stroke-dashoffset:0}
+
+.morning{margin:24px 0 0;background:var(--white);border-radius:var(--r-lg);padding:14px}
+.morning figcaption{display:flex;flex-direction:column;gap:2px;margin:2px 6px 12px}
+.morning figcaption b{font-size:19px;font-weight:600;letter-spacing:-.01em}
+.morning figcaption span{font-size:14px;color:var(--muted)}
+.morning svg{width:100%;height:auto;display:block}
+.morning text{font-family:var(--font)}
+
+.compass-card{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;background:var(--white);color:var(--ink);border-radius:var(--r-lg);padding:16px;margin-bottom:14px}
+@media (min-width:900px){.compass-card{gap:36px;padding:24px 36px}}
+.compass{width:clamp(130px,36vw,230px)}
+.compass svg{width:100%;height:auto;display:block;overflow:visible}
+.compass text{font-family:var(--font)}
+.needle{transform-origin:100px 100px;transition:transform 1s cubic-bezier(.3,1.7,.45,1)}
+.ring-spin{transform-origin:100px 100px;animation:spin 40s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.compass-text .count{font-size:12.5px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+.cw{margin:2px 0 0;font-size:clamp(30px,8vw,64px);font-weight:500;letter-spacing:-.04em;line-height:1;color:var(--blue)}
+.cw.swap{animation:swapin .5s cubic-bezier(.3,1.4,.5,1)}
+.cr{margin:6px 0 8px;font-size:16px;color:var(--muted)}
+.dcard.act{box-shadow:0 0 0 3px var(--lime)}
+.dcard.act .ico{background:var(--ink)}
+
+.plan.feat{position:relative;overflow:hidden}
+.plan.feat::after{content:"";position:absolute;top:-30%;bottom:-30%;left:-60%;width:38%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.2),transparent);transform:skewX(-18deg);animation:shine 5s ease-in-out 1.5s infinite;pointer-events:none}
+@keyframes shine{0%{left:-60%}35%,100%{left:140%}}
+.plan.feat .cost{animation:float 4s ease-in-out infinite}
+
+.lt{display:inline-block}
+.js-anim .wordmark .lt{opacity:0;translate:0 .45em;transition:opacity .6s ease,translate .9s cubic-bezier(.2,.9,.2,1);transition-delay:calc(var(--i)*70ms)}
+.js-anim .wordmark.in .lt{opacity:1;translate:0 0}
+.wordmark .lt:hover{color:var(--lime);translate:0 -.06em;transition-delay:0s}
+.js-anim .thanks .l .lt{opacity:0}
+.js-anim .thanks.in .l .lt{opacity:1;animation:bounce 1s cubic-bezier(.3,1.7,.5,1) both;animation-delay:calc(var(--i)*90ms)}
+@keyframes bounce{from{translate:0 .7em;opacity:0}}
+.say:active{scale:.9}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important;scroll-behavior:auto!important}
 }
@@ -558,7 +633,13 @@ em.hl,.hl-b{font-style:normal;color:var(--blue)}
   </div>
 
   <div class="hero-low">
+    <svg class="hero-trail" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><path d="M-10 270 C 70 270, 80 140, 170 170 S 320 60, 410 110"/></svg>
     <div class="post-wrap">
+      <span class="chipf b" style="top:9%;right:4%;animation-delay:1.4s,1.4s" aria-hidden="true">Wo?</span>
+      <span class="chipf w" style="top:30%;left:-2%;animation-delay:1.6s,.3s" aria-hidden="true">zum</span>
+      <span class="chipf l" style="top:44%;right:-4%;animation-delay:1.8s,.9s" aria-hidden="true">zur</span>
+      <span class="chipf k" style="top:66%;right:2%;animation-delay:2s,1.9s" aria-hidden="true">rechts →</span>
+      <span class="chipf w" style="top:80%;left:4%;animation-delay:2.2s,.6s" aria-hidden="true">geradeaus ↑</span>
       <svg class="post" viewBox="0 0 320 430" role="img" aria-label="Уличный указатель: Bahnhof, Rathaus, Apotheke, links">
         <ellipse cx="160" cy="420" rx="74" ry="9" fill="rgba(0,0,0,.2)"/>
         <rect class="pole" x="152" y="40" width="16" height="382" rx="8" fill="#0A0A0A"/>
@@ -580,6 +661,11 @@ em.hl,.hl-b{font-style:normal;color:var(--blue)}
     </div>
   </div>
 </header>
+
+<div class="marquee" aria-hidden="true">
+  <div class="mq"><span>geradeaus <i>↑</i> links <i>←</i> rechts <i>→</i> zurück <i>↓</i> an der Ampel <i>●</i> über die Brücke <i>~</i> durch den Park <i>✦</i> </span><span>geradeaus <i>↑</i> links <i>←</i> rechts <i>→</i> zurück <i>↓</i> an der Ampel <i>●</i> über die Brücke <i>~</i> durch den Park <i>✦</i> </span></div>
+  <div class="mq rev"><span><b>Wo ist der Bahnhof?</b><b>Wie komme ich zur Post?</b><b>Ist das weit?</b><b>Wie bitte?</b><b>Etwas langsamer, bitte.</b><b>Gibt es hier eine Apotheke?</b><b>Vielen Dank!</b></span><span><b>Wo ist der Bahnhof?</b><b>Wie komme ich zur Post?</b><b>Ist das weit?</b><b>Wie bitte?</b><b>Etwas langsamer, bitte.</b><b>Gibt es hier eine Apotheke?</b><b>Vielen Dank!</b></span></div>
+</div>
 
 <!-- ================= STORY ================= -->
 <section class="panel" id="story" aria-labelledby="story-h">
@@ -603,7 +689,7 @@ em.hl,.hl-b{font-style:normal;color:var(--blue)}
       </div>
     </div>
     <div class="story-text">
-      <p class="lead">Я переехал в Германию. В Германии есть <em class="hl">вокзал</em>. Вокзал я искал <em class="hl">сорок минут</em>.</p>
+      <p class="lead">Я переехал в Германию. В Германии есть <em class="hl">вокзал</em>. Вокзал я искал <em class="hl scrib io">сорок минут<svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M3 14 C 40 4, 90 19, 130 9 S 185 5, 197 12"/></svg></em>.</p>
       <div style="height:20px"></div>
       <p>У меня был гугл-мапс. Гугл-мапс сел. Вместе с телефоном. В 8:15 утра, на перекрестке, с чемоданом.</p>
       <p>Подхожу к мужику. Мужик в жилетке, с таксой. Говорю, экскузи. Он говорит, битте. Говорю, бахнхоф. Одно слово. Как пароль.</p>
@@ -615,6 +701,21 @@ em.hl,.hl-b{font-style:normal;color:var(--blue)}
         <div class="stat"><b><span class="io" data-count="1">1</span><small>слово</small></b><span>понял из ответа</span></div>
         <div class="stat"><b><span class="io" data-count="180">180</span>°</b><span>промахнулся с направлением</span></div>
       </div>
+      <figure class="morning">
+        <figcaption><b>Карта моего утра</b><span>Красный — это я. Зеленый — это вы после урока.</span></figcaption>
+        <svg viewBox="0 0 340 190" role="img" aria-label="Схема: вокзал налево от перекрестка, а я пошел направо">
+          <rect width="340" height="190" rx="16" fill="#F4F5F8"/>
+          <path d="M170 200V76M-10 76H350" stroke="#DCE1EA" stroke-width="22" fill="none"/>
+          <rect x="12" y="18" width="86" height="36" rx="9" fill="#014CFF"/><text x="55" y="41" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Bahnhof</text>
+          <circle cx="304" cy="36" r="17" fill="#FFE4E1"/><text x="304" y="42" text-anchor="middle" font-size="19" font-weight="800" fill="#FF5A4E">?</text>
+          <text x="92" y="108" font-size="12.5" font-weight="700" fill="#3F7F00">← links</text>
+          <text x="196" y="108" font-size="12.5" font-weight="700" fill="#FF5A4E">rechts →</text>
+          <path id="mgood" d="M170 176V76H72" fill="none" stroke="#8FCB3A" stroke-width="4" stroke-dasharray="2 8" stroke-linecap="round"/>
+          <path id="mbad" d="M170 176V76H288" fill="none" stroke="#FF5A4E" stroke-width="4" stroke-dasharray="2 8" stroke-linecap="round"/>
+          <g><circle r="12" fill="#FF5A4E" stroke="#0A0A0A" stroke-width="2.5"/><text y="4" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">я</text><animateMotion dur="6s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.6;1" calcMode="linear"><mpath href="#mbad"/></animateMotion></g>
+          <g><circle r="12" fill="#B4EC5C" stroke="#0A0A0A" stroke-width="2.5"/><text y="4" text-anchor="middle" font-size="10" font-weight="800" fill="#0A0A0A">вы</text><animateMotion dur="6s" repeatCount="indefinite" keyPoints="0;0;1;1" keyTimes="0;.25;.8;1" calcMode="linear"><mpath href="#mgood"/></animateMotion></g>
+        </svg>
+      </figure>
       <p class="after">Этот урок — чтобы у вас таких цифр не было. Спрашивать будем <b>целым предложением</b>. Понимать — <b>больше одного слова</b>. Links — это налево. Запомнили? Я — со второго раза.</p>
     </div>
   </div>
@@ -712,19 +813,39 @@ em.hl,.hl-b{font-style:normal;color:var(--blue)}
     <h2 id="dir-h">Куда идти<span class="dot"></span></h2>
     <p>Двенадцать слов. На них держится любой маршрут. Нажмите на карточку — услышите, как это звучит.</p>
   </div>
+  <div class="compass-card">
+    <div class="compass" aria-hidden="true">
+      <svg viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="96" fill="#F0F1F3"/>
+        <circle class="ring-spin" cx="100" cy="100" r="82" fill="none" stroke="#014CFF" stroke-opacity=".35" stroke-width="2" stroke-dasharray="2 7"/>
+        <text x="100" y="30" text-anchor="middle" font-size="11" font-weight="700" fill="#5B6275">geradeaus</text>
+        <text x="186" y="104" text-anchor="end" font-size="11" font-weight="700" fill="#5B6275">rechts</text>
+        <text x="100" y="182" text-anchor="middle" font-size="11" font-weight="700" fill="#5B6275">zurück</text>
+        <text x="14" y="104" font-size="11" font-weight="700" fill="#5B6275">links</text>
+        <g class="needle" id="needle" style="transform:rotate(-90deg)"><path d="M100 38 L117 104 H83 Z" fill="#014CFF"/><path d="M83 104 H117 L100 150 Z" fill="#0A0A0A" opacity=".18"/></g>
+        <circle cx="100" cy="100" r="12" fill="#B4EC5C" stroke="#0A0A0A" stroke-width="3"/>
+      </svg>
+    </div>
+    <div class="compass-text">
+      <span class="count">КОМПАС</span>
+      <p class="cw" id="cw">links</p>
+      <p class="cr" id="cr">налево. Налево!</p>
+      <p class="card-note">Нажмите на любую карточку — стрелка повернется, а слово прозвучит.</p>
+    </div>
+  </div>
   <div class="dir-grid io">
-    <button class="dcard" data-say="geradeaus"><span class="ico"><svg viewBox="0 0 48 48"><g class="mv m-up"><path class="st" d="M24 40V10"/><path class="lm" d="M15 19l9-9 9 9"/></g></svg></span><b>geradeaus</b><small>прямо</small></button>
-    <button class="dcard" data-say="links"><span class="ico"><svg viewBox="0 0 48 48"><path class="st mv m-draw" d="M32 42V26c0-5-3-8-8-8H10"/><path class="lm" d="M17 11l-7 7 7 7"/></svg></span><b>links</b><small>налево. Налево!</small></button>
-    <button class="dcard" data-say="rechts"><span class="ico"><svg viewBox="0 0 48 48"><path class="st mv m-draw" d="M16 42V26c0-5 3-8 8-8h14"/><path class="lm" d="M31 11l7 7-7 7"/></svg></span><b>rechts</b><small>направо</small></button>
-    <button class="dcard" data-say="zurück"><span class="ico"><svg viewBox="0 0 48 48"><path class="st mv m-draw" d="M14 42V20a9 9 0 0 1 18 0v12"/><path class="lm" d="M25 26l7 7 7-7"/></svg></span><b>zurück</b><small>назад</small></button>
-    <button class="dcard" data-say="bis zur Ampel"><span class="ico"><svg viewBox="0 0 48 48"><rect class="st" x="16" y="5" width="16" height="38" rx="6"/><circle class="mv m-light" cx="24" cy="14" r="4" fill="#FF5A4E"/><circle class="mv m-light d2" cx="24" cy="24" r="4" fill="#FFD23F"/><circle class="mv m-light d3" cx="24" cy="34" r="4" fill="#B4EC5C"/></svg></span><span class="case">bis zu + Dativ</span><b>bis zur Ampel</b><small>до светофора</small></button>
-    <button class="dcard" data-say="an der Kreuzung"><span class="ico"><svg viewBox="0 0 48 48"><path class="st" d="M24 5v38M5 24h38"/><circle class="lf mv m-pulse" cx="24" cy="24" r="5"/></svg></span><span class="case">an + Dativ</span><b>an der Kreuzung</b><small>на перекрестке</small></button>
-    <button class="dcard" data-say="die erste Straße links"><span class="ico"><svg viewBox="0 0 48 48"><path class="st" d="M30 44V4M30 14H14"/><path class="lm mv m-draw" d="M30 32H10"/><circle class="lf" cx="38" cy="32" r="4"/></svg></span><b>die erste Straße links</b><small>первая улица налево</small></button>
-    <button class="dcard" data-say="über die Brücke"><span class="ico"><svg viewBox="0 0 48 48"><path class="st" d="M5 28h38M8 28q16-18 32 0"/><g class="mv m-wave"><path class="lm" d="M6 38q4-4 8 0t8 0 8 0 8 0 8 0"/></g></svg></span><span class="case">über + Akkusativ</span><b>über die Brücke</b><small>через мост</small></button>
-    <button class="dcard" data-say="durch den Park"><span class="ico"><svg viewBox="0 0 48 48"><g class="mv m-sway"><circle class="lf" cx="24" cy="18" r="11"/><path class="st" d="M24 28v14"/></g></svg></span><span class="case">durch + Akkusativ</span><b>durch den Park</b><small>через парк</small></button>
-    <button class="dcard" data-say="gegenüber vom Supermarkt"><span class="ico"><svg viewBox="0 0 48 48"><rect class="st" x="4" y="14" width="12" height="20" rx="3"/><rect x="32" y="14" width="12" height="20" rx="3" class="lf"/><path class="lm mv m-lr" d="M20 24h8"/></svg></span><span class="case">+ Dativ</span><b>gegenüber</b><small>напротив</small></button>
-    <button class="dcard" data-say="neben der Post"><span class="ico"><svg viewBox="0 0 48 48"><rect class="st" x="6" y="14" width="16" height="22" rx="3"/><rect class="lf mv m-pulse" x="26" y="18" width="16" height="18" rx="3"/></svg></span><span class="case">neben + Dativ</span><b>neben der Post</b><small>рядом с почтой</small></button>
-    <button class="dcard" data-say="an der Ecke"><span class="ico"><svg viewBox="0 0 48 48"><path class="st" d="M12 6v30h30"/><circle class="lf mv m-pulse" cx="12" cy="36" r="5"/></svg></span><span class="case">an + Dativ</span><b>an der Ecke</b><small>на углу</small></button>
+    <button class="dcard" data-deg="0" data-say="geradeaus"><span class="ico"><svg viewBox="0 0 48 48"><g class="mv m-up"><path class="st" d="M24 40V10"/><path class="lm" d="M15 19l9-9 9 9"/></g></svg></span><b>geradeaus</b><small>прямо</small></button>
+    <button class="dcard" data-deg="-90" data-say="links"><span class="ico"><svg viewBox="0 0 48 48"><path class="st mv m-draw" d="M32 42V26c0-5-3-8-8-8H10"/><path class="lm" d="M17 11l-7 7 7 7"/></svg></span><b>links</b><small>налево. Налево!</small></button>
+    <button class="dcard" data-deg="90" data-say="rechts"><span class="ico"><svg viewBox="0 0 48 48"><path class="st mv m-draw" d="M16 42V26c0-5 3-8 8-8h14"/><path class="lm" d="M31 11l7 7-7 7"/></svg></span><b>rechts</b><small>направо</small></button>
+    <button class="dcard" data-deg="180" data-say="zurück"><span class="ico"><svg viewBox="0 0 48 48"><path class="st mv m-draw" d="M14 42V20a9 9 0 0 1 18 0v12"/><path class="lm" d="M25 26l7 7 7-7"/></svg></span><b>zurück</b><small>назад</small></button>
+    <button class="dcard" data-deg="0" data-say="bis zur Ampel"><span class="ico"><svg viewBox="0 0 48 48"><rect class="st" x="16" y="5" width="16" height="38" rx="6"/><circle class="mv m-light" cx="24" cy="14" r="4" fill="#FF5A4E"/><circle class="mv m-light d2" cx="24" cy="24" r="4" fill="#FFD23F"/><circle class="mv m-light d3" cx="24" cy="34" r="4" fill="#B4EC5C"/></svg></span><span class="case">bis zu + Dativ</span><b>bis zur Ampel</b><small>до светофора</small></button>
+    <button class="dcard" data-deg="0" data-say="an der Kreuzung"><span class="ico"><svg viewBox="0 0 48 48"><path class="st" d="M24 5v38M5 24h38"/><circle class="lf mv m-pulse" cx="24" cy="24" r="5"/></svg></span><span class="case">an + Dativ</span><b>an der Kreuzung</b><small>на перекрестке</small></button>
+    <button class="dcard" data-deg="-90" data-say="die erste Straße links"><span class="ico"><svg viewBox="0 0 48 48"><path class="st" d="M30 44V4M30 14H14"/><path class="lm mv m-draw" d="M30 32H10"/><circle class="lf" cx="38" cy="32" r="4"/></svg></span><b>die erste Straße links</b><small>первая улица налево</small></button>
+    <button class="dcard" data-deg="0" data-say="über die Brücke"><span class="ico"><svg viewBox="0 0 48 48"><path class="st" d="M5 28h38M8 28q16-18 32 0"/><g class="mv m-wave"><path class="lm" d="M6 38q4-4 8 0t8 0 8 0 8 0 8 0"/></g></svg></span><span class="case">über + Akkusativ</span><b>über die Brücke</b><small>через мост</small></button>
+    <button class="dcard" data-deg="0" data-say="durch den Park"><span class="ico"><svg viewBox="0 0 48 48"><g class="mv m-sway"><circle class="lf" cx="24" cy="18" r="11"/><path class="st" d="M24 28v14"/></g></svg></span><span class="case">durch + Akkusativ</span><b>durch den Park</b><small>через парк</small></button>
+    <button class="dcard" data-deg="90" data-say="gegenüber vom Supermarkt"><span class="ico"><svg viewBox="0 0 48 48"><rect class="st" x="4" y="14" width="12" height="20" rx="3"/><rect x="32" y="14" width="12" height="20" rx="3" class="lf"/><path class="lm mv m-lr" d="M20 24h8"/></svg></span><span class="case">+ Dativ</span><b>gegenüber</b><small>напротив</small></button>
+    <button class="dcard" data-deg="90" data-say="neben der Post"><span class="ico"><svg viewBox="0 0 48 48"><rect class="st" x="6" y="14" width="16" height="22" rx="3"/><rect class="lf mv m-pulse" x="26" y="18" width="16" height="18" rx="3"/></svg></span><span class="case">neben + Dativ</span><b>neben der Post</b><small>рядом с почтой</small></button>
+    <button class="dcard" data-deg="-45" data-say="an der Ecke"><span class="ico"><svg viewBox="0 0 48 48"><path class="st" d="M12 6v30h30"/><circle class="lf mv m-pulse" cx="12" cy="36" r="5"/></svg></span><span class="case">an + Dativ</span><b>an der Ecke</b><small>на углу</small></button>
   </div>
   <div class="cases">
     <div class="case-card"><h3>Стоите где-то → Dativ</h3><p><code>an der Ampel</code>, <code>an der Ecke</code>, <code>neben der Post</code>. Вопрос «где?». Отвечает Dativ.</p></div>
@@ -906,7 +1027,7 @@ em.hl,.hl-b{font-style:normal;color:var(--blue)}
   <div class="intro">
     <div>
       <div class="logo-row"><img src="media/logo.png" alt="" width="52" height="52"><span>Stellas</span></div>
-      <h2 id="st-h" class="lead" style="margin:0 0 22px">Этот урок — <em class="hl">кусочек</em>. Кусочек гайда «На улице, спросить дорогу». Гайд лежит на платформе. Таких гайдов там <em class="hl">340+</em>.</h2>
+      <h2 id="st-h" class="lead" style="margin:0 0 22px">Этот урок — <em class="hl">кусочек</em>. Кусочек гайда «На улице, спросить дорогу». Гайд лежит на платформе. Таких гайдов там <em class="hl scrib io">340+<svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M3 14 C 40 4, 90 19, 130 9 S 185 5, 197 12"/></svg></em>.</h2>
       <div class="story-text">
         <p>У меня был Duolingo. Duolingo у меня был 412 дней подряд. Сова мной гордилась. Сова присылала огонечки.</p>
         <p>Потом у меня спросили дорогу. Меня. Немецкая бабушка. Я сказал Entschuldigung. И показал рукой.</p>
@@ -1103,12 +1224,12 @@ em.hl,.hl-b{font-style:normal;color:var(--blue)}
         <a href="https://wa.me/message/D4YYEMPLIMNLA1" target="_blank" rel="noopener" aria-label="WhatsApp"><svg><use href="#i-wa"/></svg></a>
       </div>
     </div>
-    <p class="wordmark" aria-label="Stellas">Stellas<span class="dot"></span></p>
+    <p class="wordmark io" aria-label="Stellas"><span class="wm">Stellas</span><span class="dot"></span></p>
     <p class="copy">© 2026 Stellas · Немецкий от A0 до C1 · Links — это налево</p>
   </div>
 </footer>
 
-<section class="band thanks" id="danke" aria-label="Спасибо">
+<section class="band thanks io" id="danke" aria-label="Спасибо">
   <h2><span class="l">Danke</span> fürs Lesen</h2>
   <div class="post-wrap">
     <svg class="post" viewBox="0 0 320 430" aria-hidden="true">
@@ -1207,7 +1328,7 @@ function gRender(){
 $$('.opt').forEach(o=>o.addEventListener('click',()=>{
   const [full,noun,ans]=G[gi],ok=o.dataset.a===ans;
   $$('.opt').forEach(x=>{x.disabled=true;if(x.dataset.a===ans)x.classList.add('ok')});if(!ok)o.classList.add('bad');
-  if(ok)gs++;gsc.textContent=gs+' / '+G.length;
+  if(ok){gs++;burstEl(o,28)}gsc.textContent=gs+' / '+G.length;
   $('.blank',gq).textContent=ans;
   const art=full.split(' ')[0],dat=art==='die'?'der':'dem';
   gfb.textContent=(ok?'Да. ':'Нет. ')+full+' → Dativ: '+dat+' → zu + '+dat+' = '+ans+'.';
@@ -1292,12 +1413,12 @@ function rUI(){
   $$('#slist button').forEach((b,i)=>{b.classList.toggle('cur',i===rs);b.classList.toggle('done',i<rs)});
   $('#rnext').firstChild.textContent=rs===R.length-1?'Сначала ':'Дальше ';
 }
-function rGo(n){rs=n;rUI();goL(cum[END[n]])}
+function rGo(n){rs=n;rUI();goL(cum[END[n]],()=>{if(n===R.length-1)burstMap()})}
 let auto=[];function stopAuto(){auto.forEach(clearTimeout);auto=[]}
 $('#rnext').addEventListener('click',()=>{stopAuto();rGo(rs===R.length-1?0:rs+1)});
 $('#rprev').addEventListener('click',()=>{stopAuto();if(rs>0)rGo(rs-1)});
 $('#rplay').addEventListener('click',()=>{stopAuto();setL(0);rs=0;rUI();
-  const run=i=>{if(i>=R.length)return;rs=i;rUI();goL(cum[END[i]],()=>{auto.push(setTimeout(()=>run(i+1),RM?0:1500))})};
+  const run=i=>{if(i>=R.length)return;rs=i;rUI();goL(cum[END[i]],()=>{if(i===R.length-1)burstMap();auto.push(setTimeout(()=>run(i+1),RM?0:1500))})};
   auto.push(setTimeout(()=>run(1),RM?0:900))});
 setL(0);rUI();
 
@@ -1325,12 +1446,12 @@ const Q=[
 ];
 let qi=0,qs=0;const qbox=$('#qbox');
 function qRender(){
-  if(qi>=Q.length){qbox.innerHTML='<div class="bar"><i style="width:100%"></i></div><div class="qend"><span class="qmeta">ИТОГ</span><div class="big">'+qs+' / '+Q.length+'</div><p class="qtext" style="font-size:22px">'+(qs===Q.length?'Чисто. Можно ехать на вокзал.':qs>=4?'Хорошо. Один раз переспросите — и дойдете.':'Ничего. Я в свое время набрал бы ноль.')+'</p><p class="card-note">На платформе такие упражнения есть к каждому гайду — с разбором, почему ответ правильный или нет.</p><div class="ctrl" style="margin-top:14px"><button class="btn blue sm" id="qagain">Пройти еще раз</button><a class="btn ghost sm" href="#stellas">Что за платформа?</a></div></div>';
+  if(qi>=Q.length){if(qs===Q.length)setTimeout(()=>burst(innerWidth/2,innerHeight*.4,150),200);qbox.innerHTML='<div class="bar"><i style="width:100%"></i></div><div class="qend"><span class="qmeta">ИТОГ</span><div class="big">'+qs+' / '+Q.length+'</div><p class="qtext" style="font-size:22px">'+(qs===Q.length?'Чисто. Можно ехать на вокзал.':qs>=4?'Хорошо. Один раз переспросите — и дойдете.':'Ничего. Я в свое время набрал бы ноль.')+'</p><p class="card-note">На платформе такие упражнения есть к каждому гайду — с разбором, почему ответ правильный или нет.</p><div class="ctrl" style="margin-top:14px"><button class="btn blue sm" id="qagain">Пройти еще раз</button><a class="btn ghost sm" href="#stellas">Что за платформа?</a></div></div>';
     $('#qagain').addEventListener('click',()=>{qi=0;qs=0;qRender()});return}
   const x=Q[qi];
   qbox.innerHTML='<div class="bar"><i style="width:'+(qi/Q.length*100)+'%"></i></div><span class="qmeta">ВОПРОС '+(qi+1)+' / '+Q.length+'</span><p class="qtext">'+x.q+'</p><div class="qopts">'+x.o.map((o,i)=>'<button class="qopt" data-i="'+i+'">'+o+'</button>').join('')+'</div><div id="qexp"></div>';
   $$('.qopt',qbox).forEach(b=>b.addEventListener('click',()=>{
-    const i=+b.dataset.i,ok=i===x.a;if(ok)qs++;
+    const i=+b.dataset.i,ok=i===x.a;if(ok){qs++;burstEl(b,40)}
     $$('.qopt',qbox).forEach((o,j)=>{o.disabled=true;if(j===x.a)o.classList.add('ok')});if(!ok)b.classList.add('bad');
     $('.bar i',qbox).style.width=((qi+1)/Q.length*100)+'%';
     $('#qexp').innerHTML='<div class="exp"><b>'+(ok?'Верно.':'Не совсем.')+'</b>'+x.e+'</div><button class="btn blue sm" id="qnext" style="margin-top:14px">'+(qi===Q.length-1?'Итог':'Дальше')+'</button>';
@@ -1348,7 +1469,7 @@ function bReset(){slot.innerHTML='';pool.innerHTML='';slot.classList.remove('win
 $('#bcheck').addEventListener('click',()=>{
   const s=$$('.chip',slot).map(c=>c.textContent).join(' ');
   if(pool.children.length){bmsg.textContent='Еще не все слова. Их пять.';return}
-  if(s===TARGET){slot.classList.add('win');bmsg.textContent='Да! Глагол впереди, ab в конце. Послушайте, как звучит.';say(TARGET)}
+  if(s===TARGET){slot.classList.add('win');bmsg.textContent='Да! Глагол впереди, ab в конце. Послушайте, как звучит.';say(TARGET);burstEl(slot,90)}
   else{slot.classList.remove('nope');void slot.offsetWidth;slot.classList.add('nope');bmsg.textContent='Почти. Подсказка: глагол — первым, ab — последним.'}
 });
 $('#breset').addEventListener('click',bReset);bReset();
@@ -1357,6 +1478,62 @@ $('#breset').addEventListener('click',bReset);bReset();
 const rt=$('#rtrack');const rstep=()=>($('.rev',rt)?.getBoundingClientRect().width||300)+14;
 $('#rvprev').addEventListener('click',()=>rt.scrollBy({left:-rstep(),behavior:RM?'auto':'smooth'}));
 $('#rvnext').addEventListener('click',()=>rt.scrollBy({left:rstep(),behavior:RM?'auto':'smooth'}));
+
+/* ---------- confetti ---------- */
+let cv=null,ctx=null,parts=[],cRaf=0;
+const CC=['#B4EC5C','#014CFF','#0A0A0A','#FFFFFF','#FF5A4E','#B4EC5C'];
+function burst(x,y,n){
+  if(RM)return;
+  if(!cv){cv=document.createElement('canvas');cv.className='confetti';document.body.appendChild(cv);ctx=cv.getContext('2d')}
+  const dpr=Math.min(2,devicePixelRatio||1);cv.width=innerWidth*dpr;cv.height=innerHeight*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+  for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=3+Math.random()*8;parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-5,w:5+Math.random()*7,h:3+Math.random()*5,r:Math.random()*6.3,vr:(Math.random()-.5)*.35,c:CC[i%CC.length],t:0,round:Math.random()<.3})}
+  if(!cRaf)cRaf=requestAnimationFrame(tick);
+}
+function tick(){
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  parts=parts.filter(p=>p.t<170&&p.y<innerHeight+30);
+  parts.forEach(p=>{p.t++;p.vy+=.22;p.vx*=.985;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;ctx.save();ctx.globalAlpha=Math.max(0,1-p.t/170);ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;
+    if(p.c==='#FFFFFF'){ctx.strokeStyle='#0A0A0A';ctx.lineWidth=1}
+    if(p.round){ctx.beginPath();ctx.arc(0,0,p.h,0,7);ctx.fill()}else{ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);if(p.c==='#FFFFFF')ctx.strokeRect(-p.w/2,-p.h/2,p.w,p.h)}ctx.restore()});
+  if(parts.length)cRaf=requestAnimationFrame(tick);else{cRaf=0;ctx.clearRect(0,0,innerWidth,innerHeight)}
+}
+function burstEl(el,n){const r=el.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,n)}
+function burstMap(){const r=map.getBoundingClientRect();burst(r.left+r.width*192/360,r.top+r.height*39/460,110)}
+
+/* ---------- progress ---------- */
+const pb=document.createElement('div');pb.className='progress';document.body.appendChild(pb);
+const prog=()=>{const h=document.documentElement.scrollHeight-innerHeight;pb.style.transform='scaleX('+(h>0?Math.min(1,scrollY/h):0)+')'};
+addEventListener('scroll',prog,{passive:true});prog();
+
+/* ---------- split letters ---------- */
+function split(el){const t=el.textContent;el.textContent='';[...t].forEach((ch,i)=>{const s=document.createElement('span');s.className='lt';s.style.setProperty('--i',i);s.textContent=ch===' '?' ':ch;el.appendChild(s)})}
+split($('.wordmark .wm'));split($('.thanks .l'));
+if(!RM&&'IntersectionObserver' in window)document.documentElement.classList.add('js-anim');
+
+/* ---------- reveal on scroll ---------- */
+if(!RM&&'IntersectionObserver' in window){
+  const sel='.sec-head,.card,.dcard,.box,.fcard,.plan,.rev,.pcard,.fq,.case-card,.map-card,.chat,.phone-v,.frame,.shot,.money,.strip,.compass-card,.morning,.game,.builder,.fm,.stat,.story h2,.lead,.cta h2,.cta p,.foot-box,.thanks-side';
+  const ro=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');ro.unobserve(en.target)}}),{threshold:.12,rootMargin:'0px 0px -5% 0px'});
+  $$(sel).forEach(el=>{if(el.closest('#top'))return;const sib=[...el.parentElement.children].filter(c=>c.matches(sel));el.style.setProperty('--i',Math.min(Math.max(0,sib.indexOf(el)),6));el.classList.add('rv');ro.observe(el)});
+}
+
+/* ---------- compass ---------- */
+const needle=$('#needle'),cw=$('#cw'),cr=$('#cr');let demo=0,demoOn=true,di=0;
+function point(card){const deg=+card.dataset.deg||0;needle.style.transform='rotate('+deg+'deg)';cw.textContent=$('b',card).textContent;cr.textContent=$('small',card).textContent;
+  $$('.dcard').forEach(c=>c.classList.toggle('act',c===card));cw.classList.remove('swap');void cw.offsetWidth;cw.classList.add('swap')}
+$$('.dcard').forEach(c=>c.addEventListener('click',()=>{demoOn=false;clearInterval(demo);point(c)}));
+if(!RM&&'IntersectionObserver' in window){
+  const cards=$$('.dcard');
+  const co=new IntersectionObserver(es=>es.forEach(en=>{clearInterval(demo);if(en.isIntersecting&&demoOn){demo=setInterval(()=>{if(!demoOn)return;di=(di+1)%4;point(cards[di])},1900)}}),{threshold:.4});
+  co.observe($('.compass-card'));
+}
+
+/* ---------- hero parallax ---------- */
+if(!RM&&matchMedia('(pointer:fine)').matches){
+  const hw=$('#top');
+  hw.addEventListener('pointermove',e=>{const r=hw.getBoundingClientRect();hw.style.setProperty('--px',((e.clientX-r.left)/r.width-.5).toFixed(3));hw.style.setProperty('--py',((e.clientY-r.top)/r.height-.5).toFixed(3))});
+  hw.addEventListener('pointerleave',()=>{hw.style.setProperty('--px',0);hw.style.setProperty('--py',0)});
+}
 
 /* ---------- floating CTA ---------- */
 const fcta=$('#fcta'),hero=$('#top');let block=0;
